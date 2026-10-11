@@ -1,7 +1,7 @@
 # CatTube – PWA de El loquito
 
 CatTube – PWA de El loquito
-El loquito (Equipo Arcoiris, grupo IDGS102N, Universidad Tecnológica de Chihuahua).
+(Equipo Arcoiris, grupo IDGS102N, Universidad Tecnológica de Chihuahua).
 
 10 de Octubre del 2026
 
