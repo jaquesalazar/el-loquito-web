@@ -10,11 +10,12 @@ CatTube es la plataforma ficticia de videos cortos del universo de *El loquito*.
 | Avatar | imagen | `loquito.png` |
 | Nombre | texto | El loquito |
 | Usuario | texto | @elloquito |
-| Suscriptores | número | 12,400 (se muestra "12.4K") |
-| Total de shorts | número | 8 |
+| Biografía | texto | Humor absurdo. Gatos serios. Cero contexto. |
+| Suscriptores | número | 12,400 (se muestra "12,4 mil") |
+| Total de shorts | número | 28 |
 | Botón Suscribirse | estado | suscrito / no suscrito |
 | Pestañas | navegación | Shorts / Acerca de |
-| Cuadrícula de shorts | lista | miniatura vertical, vistas y likes |
+| Cuadrícula de shorts | lista | miniatura vertical, vistas, likes, título y fecha relativa ("Hace 2 días") |
 
 Interacciones: suscribirse o cancelar, clic en un short para abrir el visor.
 
@@ -33,9 +34,9 @@ Interacciones: suscribirse o cancelar, clic en un short para abrir el visor.
 
 | Elemento | Dato |
 |---|---|
-| Mensaje | "Sin conexión" |
+| Mensaje | "Sin conexión. No se pudo cargar la página. Comprueba tu conexión a internet." |
 | Botón | Reintentar |
-| Contenido guardado | shorts disponibles en caché |
+| Contenido guardado | sección "Shorts guardados" con las miniaturas en caché |
 
 ## Panel de navegación (App Shell)
 
@@ -49,6 +50,16 @@ Logo de CatTube, Perfil, Shorts, Guardados, Instalar app e indicador de conexió
 | Error | Mensaje con botón Reintentar |
 | Sin datos | "Aún no hay shorts" |
 | Sin conexión | Franja de aviso superior |
+
+## Formato de los datos
+
+La API devuelve datos crudos (números y fechas reales) y la interfaz se encarga de darles formato, con funciones en `shared/utils/`:
+
+| La API devuelve | La interfaz muestra |
+|---|---|
+| `12400` | 12,4 mil |
+| `24800` | 24,8 mil |
+| `2026-10-08` | Hace 2 días |
 
 ## Endpoints
 
@@ -69,9 +80,9 @@ Logo de CatTube, Perfil, Shorts, Guardados, Instalar app e indicador de conexió
   "username": "@elloquito",
   "avatar": "assets/loquito.png",
   "cover": "assets/portada.jpg",
-  "bio": "Escucha, que esto es importante.",
+  "bio": "Humor absurdo. Gatos serios. Cero contexto.",
   "subscribers": 12400,
-  "totalShorts": 8,
+  "totalShorts": 28,
   "isSubscribed": false
 }
 ```
@@ -82,11 +93,12 @@ Logo de CatTube, Perfil, Shorts, Guardados, Instalar app e indicador de conexió
 [
   {
     "id": 1,
-    "title": "Discurso en la plaza",
+    "title": "Mi gato paga el alquiler",
     "thumbnail": "assets/thumbs/01.jpg",
-    "views": 58000,
-    "likes": 3200,
-    "duration": 42
+    "views": 24800,
+    "likes": 1200,
+    "duration": 42,
+    "publishedAt": "2026-10-08"
   }
 ]
 ```
@@ -96,10 +108,10 @@ Logo de CatTube, Perfil, Shorts, Guardados, Instalar app e indicador de conexió
 ```json
 {
   "id": 1,
-  "title": "Discurso en la plaza",
+  "title": "Mi gato paga el alquiler",
   "videoUrl": "assets/videos/01.mp4",
   "author": "@elloquito",
-  "likes": 3200,
+  "likes": 1200,
   "liked": false,
   "nextId": 2
 }
@@ -107,6 +119,6 @@ Logo de CatTube, Perfil, Shorts, Guardados, Instalar app e indicador de conexió
 
 ### Ejemplos de POST
 
-`POST /shorts/{id}/like` responde `{ "liked": true, "likes": 3201 }`
+`POST /shorts/{id}/like` responde `{ "liked": true, "likes": 1201 }`
 
 `POST /channel/subscribe` responde `{ "isSubscribed": true, "subscribers": 12401 }`
