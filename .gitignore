@@ -147,3 +147,6 @@ vite.config.ts.timestamp-*
 
 # Turbo Repo
 .turbo
+
+# Plantilla temporal de Vite
+/cattube-temp/
