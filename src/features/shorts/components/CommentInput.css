@@ -1,0 +1,98 @@
+.comment-input-form {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 14px 16px;
+  background-color: #ffffff;
+  border-top: 1px solid #e8e8e8;
+}
+
+.comment-input-field {
+  flex: 1;
+  min-width: 0;
+  height: 44px;
+  padding: 0 16px;
+  background-color: #f5f5f2;
+  border: 1px solid #e4e4df;
+  border-radius: 24px;
+  color: #333333;
+  font-family: 'Nunito', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  outline: none;
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease;
+}
+
+
+.comment-input-field::placeholder {
+  color: #999999;
+}
+
+.comment-input-field:focus {
+  background-color: #ffffff;
+  border-color: #6e8b3e;
+}
+
+.comment-send-button {
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #6e8b3e;
+  color: #ffffff;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.comment-send-button:hover:not(:disabled) {
+  background-color: #44581f;
+  transform: scale(1.06);
+}
+
+.comment-send-button:active:not(:disabled) {
+  transform: scale(0.95);
+}
+
+.comment-send-button:disabled {
+  background-color: #b7c5a1;
+  cursor: not-allowed;
+}
+
+.comment-send-button:focus-visible {
+  outline: 3px solid #d9a441;
+  outline-offset: 3px;
+}
+
+@media (max-width: 700px) {
+  .comment-input-form {
+    gap: 8px;
+    padding: 12px;
+  }
+
+  .comment-input-field {
+    height: 40px;
+    font-size: 12px;
+  }
+
+  .comment-send-button {
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .comment-input-field,
+  .comment-send-button {
+    transition: none;
+  }
+}

@@ -1,0 +1,42 @@
+/* Sección de shorts del perfil */
+
+.shorts-section {
+  width: 100%;
+  min-width: 0;
+}
+
+/* Cuadrícula horizontal de cinco shorts */
+
+.shorts-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 14px;
+  width: 100%;
+}
+
+/* Mensaje cuando no existen shorts */
+
+.shorts-empty {
+  color: var(--text-secondary);
+  font-size: 13px;
+  padding: 30px 0;
+}
+
+/* Desplazamiento horizontal cuando no caben las tarjetas */
+
+@media (max-width: 1100px) {
+  .shorts-grid {
+    display: flex;
+    gap: 14px;
+
+    overflow-x: auto;
+    padding-bottom: 12px;
+
+    scroll-snap-type: x mandatory;
+  }
+
+  .shorts-grid > * {
+    flex: 0 0 155px;
+    scroll-snap-align: start;
+  }
+}
