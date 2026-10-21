@@ -1,0 +1,130 @@
+/* CatTube - Botones de acciones del short */
+
+.short-actions {
+  position: absolute;
+  right: 14px;
+  bottom: 120px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+
+  z-index: 5;
+}
+
+.short-action-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.short-action-button {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(255, 255, 255, 0.92);
+  color: #6b5335;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  transition:
+    transform 0.2s ease,
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.short-action-button svg {
+  width: 23px;
+  height: 23px;
+}
+
+.short-action-button:hover {
+  transform: scale(1.1);
+  background-color: #ffffff;
+}
+
+.short-action-button:active {
+  transform: scale(0.94);
+}
+
+.short-action-button:focus-visible {
+  outline: 3px solid var(--status);
+  outline-offset: 3px;
+}
+
+
+.short-action-button.is-liked {
+  background-color: #d9a441;
+  color: #ffffff;
+
+  animation: short-like-pop 0.3s ease;
+}
+
+
+@keyframes short-like-pop {
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.2);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+.short-action-button.is-saved {
+  background-color: #6e8b3e;
+  color: #ffffff;
+}
+
+.short-action-count,
+.short-action-label {
+  font-family: 'Nunito', sans-serif;
+  font-size: 12px;
+  font-weight: 800;
+
+  color: #ffffff;
+  text-align: center;
+
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
+}
+
+@media (max-width: 700px) {
+  .short-actions {
+    right: 10px;
+    bottom: 110px;
+    gap: 15px;
+  }
+
+  .short-action-button {
+    width: 42px;
+    height: 42px;
+  }
+
+  .short-action-button svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .short-action-count,
+  .short-action-label {
+    font-size: 11px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .short-action-button {
+    transition: none;
+  }
+
+  .short-action-button.is-liked {
+    animation: none;
+  }
+}

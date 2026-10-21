@@ -1,0 +1,259 @@
+/* Tarjeta individual de un short */
+
+.short-card {
+  width: 100%;
+  min-width: 0;
+}
+
+/* Miniatura vertical */
+
+.short-thumbnail {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 0.56;
+
+  background-color: #e5e5e5;
+  border: 1px solid #dedede;
+  border-radius: 5px;
+  overflow: hidden;
+
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.short-card:hover .short-thumbnail,
+.short-card:focus-within .short-thumbnail {
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.12);
+}
+
+/* Líneas diagonales del placeholder */
+
+.short-thumbnail::before,
+.short-thumbnail::after {
+  content: "";
+  position: absolute;
+  width: 150%;
+  height: 1px;
+  background-color: #d7d7d7;
+  left: -25%;
+  top: 50%;
+}
+
+.short-thumbnail::before {
+  transform: rotate(59deg);
+}
+
+.short-thumbnail::after {
+  transform: rotate(-59deg);
+}
+
+/* Silueta de persona */
+
+.short-placeholder {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.short-person-head {
+  position: absolute;
+  width: 34%;
+  aspect-ratio: 1;
+  top: 26%;
+  left: 33%;
+
+  background-color: #d2d2d2;
+  border-radius: 50%;
+}
+
+.short-person-body {
+  position: absolute;
+  width: 57%;
+  height: 34%;
+  top: 48%;
+  left: 21.5%;
+
+  background-color: #d2d2d2;
+  border-radius: 38% 38% 25% 25%;
+}
+
+/* Botón de reproducción */
+
+.short-play {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  width: 34px;
+  height: 34px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background-color: white;
+  color: #737373;
+  border: none;
+  border-radius: 50%;
+
+  font-size: 15px;
+  z-index: 2;
+}
+
+.short-play:disabled {
+  opacity: 1;
+  cursor: not-allowed;
+}
+
+/* Indicadores de vistas y likes */
+
+.short-metrics {
+  position: absolute;
+  bottom: 8px;
+  left: 7px;
+  z-index: 3;
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 3px;
+
+  padding: 5px 6px;
+
+  background-color: white;
+  color: #575757;
+  border-radius: 3px;
+
+  font-size: 10px;
+}
+
+.short-metrics span {
+  white-space: nowrap;
+}
+
+/* Título y fecha */
+
+.short-details {
+  padding-top: 9px;
+}
+
+.short-details h3 {
+  margin: 0 0 4px;
+
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.4;
+  color: #292929;
+}
+
+.short-details p {
+  margin: 0;
+
+  font-size: 10px;
+  color: var(--text-secondary);
+}
+
+/* Contenedor de vistas y likes */
+
+.short-metrics {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 5px;
+
+  padding: 7px 9px;
+
+  background-color: white;
+  border-radius: 7px;
+
+  font-size: 12px;
+}
+
+/* Icono de visualizaciones */
+
+.short-views {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+
+  color: #575757;
+}
+
+/* Botón de patita de gato */
+
+.short-like {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+
+  padding: 0;
+  margin: 0;
+
+  background: transparent;
+  border: none;
+  border-radius: 0;
+
+  color: #575757;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 400;
+
+  cursor: pointer;
+}
+
+/* Patita cuando se activa el like */
+
+.short-like.liked {
+  color: #D9A441;
+}
+
+/* Efecto al pasar el cursor */
+
+.short-like:hover {
+  color: #D9A441;
+}
+
+/* Tamaño de los iconos */
+
+.short-views svg,
+.short-like svg {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+/* Títulos de los videos más grandes */
+
+.short-details h3 {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.4;
+  margin-bottom: 5px;
+}
+
+/* Fecha de publicación */
+
+.short-details p {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+/* Tipografía de las tarjetas */
+
+.short-details h3 {
+  font-size: 16px;
+  font-weight: 800;
+  line-height: 1.4;
+}
+
+.short-details p {
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.short-metrics,
+.short-like {
+  font-size: 13px;
+  font-weight: 700;
+}

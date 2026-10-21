@@ -1,0 +1,21 @@
+:root {
+  font-family: 'Nunito', Arial, Helvetica, sans-serif;
+
+  --menu-bg: rgba(68, 88, 31, 0.9);
+  --logo-cat: #6E8B3E;
+  --menu-text: #ECE5D3;
+  --status: #D9A441;
+  --icon-accent: #6B5335;
+
+  --menu-active: #6E8B3E;
+  --menu-inactive: #3D511D;
+
+  --background: #F5F5F5;
+  --content-bg: #FFFFFF;
+  --placeholder: #E5E5E5;
+  --text-primary: #303030;
+  --text-secondary: #858585;
+  --border: #E5E5E5;
+
+  --border-radius: 10px;
+}
