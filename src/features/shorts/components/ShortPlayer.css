@@ -1,0 +1,138 @@
+/* Reproductor de Shorts */
+ 
+/* Contenedor principal del reproductor */
+.short-player {
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+}
+
+/* Área vertical del video */
+.short-player-video {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 500px;
+  background-color: #252525;
+  border-radius: 14px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.short-player-play {
+  width: 64px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(255, 255, 255, 0.92);
+  color: #252525;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 2;
+  transition:
+    transform 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.short-player-play:hover {
+  transform: scale(1.08);
+  background-color: #ffffff;
+}
+
+.short-player-play:active {
+  transform: scale(0.96);
+}
+
+.short-player-play:focus-visible {
+  outline: 3px solid var(--status);
+  outline-offset: 4px;
+}
+
+.short-player-info {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 60px 22px 24px;
+  color: #ffffff;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.8),
+    rgba(0, 0, 0, 0)
+  );
+
+  z-index: 1;
+}
+
+.short-player-user {
+  margin: 0 0 8px;
+  font-family: 'Nunito', sans-serif;
+  font-size: 17px;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.short-player-title {
+  margin: 0 0 7px;
+  font-family: 'Nunito', sans-serif;
+  font-size: 18px;
+  font-weight: 800;
+  line-height: 1.3;
+  color: #ffffff;
+}
+
+.short-player-description {
+  margin: 0 0 10px;
+  font-family: 'Nunito', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.5;
+  color: #f0f0f0;
+}
+
+.short-player-hashtags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.short-player-hashtags span {
+  font-family: 'Nunito', sans-serif;
+  font-size: 14px;
+  font-weight: 800;
+
+  color: #a8c76b;
+}
+
+@media (max-width: 700px) {
+  .short-player-video {
+    min-height: 420px;
+    border-radius: 10px;
+  }
+
+  .short-player-play {
+    width: 56px;
+    height: 56px;
+  }
+
+  .short-player-info {
+    padding: 50px 15px 18px;
+  }
+
+  .short-player-user {
+    font-size: 15px;
+  }
+
+  .short-player-title {
+    font-size: 16px;
+  }
+
+  .short-player-description,
+  .short-player-hashtags span {
+    font-size: 13px;
+  }
+}

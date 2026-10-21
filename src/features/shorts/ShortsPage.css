@@ -1,0 +1,232 @@
+/* Distribución adaptable del reproductor, comentarios y navegación de CatTube */
+.shorts-page {
+  width: 100%;
+  min-height: 100vh;
+  padding: 24px 28px;
+  box-sizing: border-box;
+  background-color: #f8f9f5;
+  font-family: 'Nunito', sans-serif;
+}
+
+.shorts-page-container {
+  width: 100%;
+  max-width: none; /*Ancho de los contenedorees */ 
+  margin: 0 auto;
+}
+
+.shorts-back-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  margin-bottom: 22px;
+  padding: 0;
+  background: transparent;
+  border: none;
+  color: #44581f;
+  font-family: 'Nunito', sans-serif;
+  font-size: 15px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.shorts-back-button span {
+  font-size: 23px;
+  line-height: 1;
+}
+
+.shorts-back-button:hover {
+  color: #6e8b3e;
+}
+
+.shorts-back-button:focus-visible {
+  outline: 3px solid #d9a441;
+  outline-offset: 5px;
+  border-radius: 4px;
+}
+
+.shorts-page-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr) 56px;
+  justify-content: stretch;
+  align-items: stretch;
+  gap: 20px;
+  width: 100%;
+  height: 610px;
+  min-height: 0;
+}
+
+.shorts-video-column {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  border-radius: 16px;
+  animation: shorts-slide-down 0.35s ease-out;
+}
+
+.shorts-video-column.shorts-slide-up {
+  animation-name: shorts-slide-up;
+}
+
+.shorts-video-column.shorts-slide-down {
+  animation-name: shorts-slide-down;
+}
+
+.shorts-comments-column {
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  border-radius: 16px;
+  animation: shorts-fade-in 0.3s ease-out;
+}
+
+.shorts-page-layout .short-player,
+.shorts-page-layout .short-player-video,
+.shorts-page-layout .comments-panel {
+  height: 100%;
+  min-height: 0;
+}
+
+.shorts-page-layout .comments-list {
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.shorts-page-layout .short-navigator {
+  width: 56px;
+  height: 100%;
+}
+
+.shorts-page-counter {
+  margin: 16px 0 0;
+  color: #777777;
+  font-family: 'Nunito', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  text-align: center;
+}
+
+@keyframes shorts-slide-down {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes shorts-slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes shorts-fade-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@media (max-width: 1150px) {
+  .shorts-page {
+    padding: 22px 16px;
+  }
+
+  .shorts-page-layout {
+    grid-template-columns: minmax(0, 290px) minmax(0, 1fr) 48px;
+    gap: 12px;
+  }
+
+  .shorts-page-layout .short-navigator {
+    width: 48px;
+  }
+
+  .shorts-page-layout .short-nav-button {
+    width: 44px;
+    height: 44px;
+  }
+}
+
+@media (max-width: 900px) {
+  .shorts-page-layout {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    height: 520px;
+    gap: 14px;
+  }
+
+  .shorts-page-layout .short-navigator {
+    grid-column: 1 / -1;
+    flex-direction: row;
+    justify-content: center;
+    width: 100%;
+    height: auto;
+  }
+}
+
+@media (max-width: 700px) {
+  .shorts-page {
+    padding: 20px 12px;
+  }
+
+  .shorts-back-button {
+    margin-bottom: 18px;
+    font-size: 14px;
+  }
+
+  .shorts-page-layout {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: auto;
+    gap: 16px;
+  }
+
+  .shorts-video-column {
+    width: 100%;
+    max-width: 340px;
+    height: 500px;
+    flex-shrink: 0;
+  }
+
+  .shorts-comments-column {
+    width: 100%;
+    max-width: 420px;
+    height: 420px;
+    flex-shrink: 0;
+  }
+
+  .shorts-page-layout .short-navigator {
+    flex-direction: row;
+    width: 100%;
+    height: auto;
+  }
+
+  .shorts-page-counter {
+    margin-top: 14px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shorts-video-column,
+  .shorts-comments-column {
+    animation: none;
+  }
+}
