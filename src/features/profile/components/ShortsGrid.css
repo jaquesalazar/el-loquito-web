@@ -1,11 +1,10 @@
-/* Sección de shorts del perfil */
+
+/* Estilos de la cuadrícula de Shorts y sus estados visuales. */
 
 .shorts-section {
   width: 100%;
   min-width: 0;
 }
-
-/* Cuadrícula horizontal de cinco shorts */
 
 .shorts-grid {
   display: grid;
@@ -14,24 +13,133 @@
   width: 100%;
 }
 
-/* Mensaje cuando no existen shorts */
-
 .shorts-empty {
   color: var(--text-secondary);
   font-size: 13px;
   padding: 30px 0;
 }
 
-/* Desplazamiento horizontal cuando no caben las tarjetas */
+.shorts-skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+}
+
+.shorts-skeleton-image {
+  width: 100%;
+  aspect-ratio: 9 / 16;
+  border-radius: 10px;
+  background-color: #E5E5E5;
+  animation: shorts-pulse 1.5s ease-in-out infinite;
+}
+
+.shorts-skeleton-line {
+  width: 90%;
+  height: 12px;
+  border-radius: 6px;
+  background-color: #E5E5E5;
+  animation: shorts-pulse 1.5s ease-in-out infinite;
+}
+
+.shorts-skeleton-line--short {
+  width: 55%;
+}
+
+.shorts-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  min-height: 280px;
+  padding: 30px 16px;
+  box-sizing: border-box;
+  text-align: center;
+}
+
+.shorts-state h2 {
+  margin: 0;
+  color: var(--text-primary);
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.shorts-state p {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 14px;
+}
+
+.shorts-retry-button {
+  margin-top: 6px;
+  padding: 10px 24px;
+  border: none;
+  border-radius: 8px;
+  background-color: #3F9A1E;
+  color: #FFFFFF;
+  font-family: 'Nunito', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.shorts-retry-button:hover {
+  background-color: #327C17;
+}
+
+.shorts-retry-button:focus-visible {
+  outline: 3px solid #3F9A1E;
+  outline-offset: 3px;
+}
+
+.shorts-offline-message {
+  padding: 24px 12px;
+  text-align: center;
+}
+
+.shorts-offline-message p {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 14px;
+}
+
+.shorts-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@keyframes shorts-pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shorts-skeleton-image,
+  .shorts-skeleton-line {
+    animation: none;
+  }
+}
 
 @media (max-width: 1100px) {
   .shorts-grid {
     display: flex;
     gap: 14px;
-
     overflow-x: auto;
     padding-bottom: 12px;
-
     scroll-snap-type: x mandatory;
   }
 

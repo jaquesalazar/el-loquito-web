@@ -1,16 +1,19 @@
-/* Pantalla de visualización y navegación de shorts*/
+/* Pantalla de Shorts con navegación y estados de carga, error y conexión. */
 
 import { useCallback, useState } from 'react'
-import { shortsData } from './data'
 import { useShortsNavigation } from './hooks/useShortsNavigation'
+import usePlayerShorts from './hooks/usePlayerShorts'
 import ShortPlayer from './components/ShortPlayer'
 import ActionButtons from './components/ActionButtons'
 import CommentsPanel from './components/CommentsPanel'
 import ShortNavigator from './components/ShortNavigator'
 import Toast from './components/Toast'
+import OfflineBanner from '../../shared/components/OfflineBanner'
 import './ShortsPage.css'
 
 function ShortsPage({ onBackToProfile }) {
+  const { shorts, status, retry } = usePlayerShorts()
+
   const {
     currentIndex,
     direction,
@@ -18,11 +21,11 @@ function ShortsPage({ onBackToProfile }) {
     isLast,
     nextShort,
     previousShort
-  } = useShortsNavigation(shortsData.length)
+  } = useShortsNavigation(shorts.length)
 
   const [toastMessage, setToastMessage] = useState('')
 
-  const currentShort = shortsData[currentIndex]
+  const currentShort = shorts[currentIndex]
 
   const closeToast = useCallback(() => {
     setToastMessage('')
@@ -36,21 +39,59 @@ function ShortsPage({ onBackToProfile }) {
     onBackToProfile?.()
   }
 
-  return (
-    <main className="shorts-page">
-      <div className="shorts-page-container">
+  function renderContent() {
+    if (status === 'loading') {
+      return (
+        <div className="shorts-player-state" role="status" aria-live="polite">
+          <span className="shorts-loading-spinner" aria-hidden="true"></span>
+          <p>Cargando shorts...</p>
+        </div>
+      )
+    }
 
-        <button
-          type="button"
-          className="shorts-back-button"
-          onClick={handleBackToProfile}
-        >
-          <span aria-hidden="true">←</span>
-          Volver al perfil
-        </button>
+    if (status === 'error') {
+      return (
+        <div className="shorts-player-state" role="alert">
+          <h2>No pudimos cargar los shorts</h2>
+          <button
+            type="button"
+            className="shorts-player-retry"
+            onClick={retry}
+          >
+            Reintentar
+          </button>
+        </div>
+      )
+    }
 
+    if (status === 'offline') {
+      return (
+        <div className="shorts-player-state">
+          <OfflineBanner variant="inline" />
+          <p>Los shorts no están disponibles sin conexión.</p>
+          <button
+            type="button"
+            className="shorts-player-retry"
+            onClick={retry}
+          >
+            Reintentar
+          </button>
+        </div>
+      )
+    }
+
+    if (status === 'empty' || !currentShort) {
+      return (
+        <div className="shorts-player-state">
+          <h2>Aún no hay shorts</h2>
+          <p>Cuando se publiquen videos, aparecerán aquí.</p>
+        </div>
+      )
+    }
+
+    return (
+      <>
         <div className="shorts-page-layout">
-
           <div
             key={currentShort.id}
             className={`shorts-video-column shorts-slide-${direction}`}
@@ -76,13 +117,28 @@ function ShortsPage({ onBackToProfile }) {
             isFirst={isFirst}
             isLast={isLast}
           />
-
         </div>
 
         <p className="shorts-page-counter">
-          Short {currentIndex + 1} de {shortsData.length}
+          Short {currentIndex + 1} de {shorts.length}
         </p>
+      </>
+    )
+  }
 
+  return (
+    <main className="shorts-page">
+      <div className="shorts-page-container">
+        <button
+          type="button"
+          className="shorts-back-button"
+          onClick={handleBackToProfile}
+        >
+          <span aria-hidden="true">←</span>
+          Volver al perfil
+        </button>
+
+        {renderContent()}
       </div>
 
       <Toast
