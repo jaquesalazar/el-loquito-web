@@ -1,26 +1,29 @@
+
+/* Hook para seleccionar 15 comentarios de forma estable según el Short actual. */
+
 import { useMemo } from 'react'
 import { commentsPool } from '../commentsData'
 
-// Mezcla los comentarios con el algoritmo Fisher-Yates
-function shuffleComments(comments) {
-  const shuffled = [...comments]
+function getCommentScore(shortId, commentId) {
+  const text = `${shortId}-${commentId}`
+  let hash = 2166136261
 
-  for (let i = shuffled.length - 1; i > 0; i--) {
-    const randomIndex = Math.floor(Math.random() * (i + 1))
-
-    ;[shuffled[i], shuffled[randomIndex]] = [
-      shuffled[randomIndex],
-      shuffled[i]
-    ]
+  for (let i = 0; i < text.length; i++) {
+    hash ^= text.charCodeAt(i)
+    hash = Math.imul(hash, 16777619)
   }
 
-  return shuffled
+  return hash >>> 0
 }
 
-// Selecciona 15 comentarios
 export function useRandomComments(shortId) {
   const comments = useMemo(() => {
-    const shuffled = shuffleComments(commentsPool)
+    const shuffled = [...commentsPool].sort((a, b) => {
+      return (
+        getCommentScore(shortId, a.id) -
+        getCommentScore(shortId, b.id)
+      )
+    })
 
     return shuffled.slice(0, 15).map((comment) => ({
       ...comment,
