@@ -1,11 +1,20 @@
+/* Pantalla de perfil de CatTube con aviso de conexión. */
+
 import { profileData } from './data'
 import ShortsGrid from './components/ShortsGrid'
+import OfflineBanner from '../../shared/components/OfflineBanner'
+import useOnlineStatus from '../../shared/hooks/useOnlineStatus'
+import useShorts from '../shorts/hooks/useShorts'
 import './ProfilePage.css'
 
 function ProfilePage() {
+  const isOnline = useOnlineStatus()
+  const { shorts, state, retry } = useShorts()
+
   return (
     <section className="profile-page">
-      {}
+      {!isOnline && <OfflineBanner variant="page" />}
+
       <div
         className="profile-cover"
         role="img"
@@ -14,7 +23,6 @@ function ProfilePage() {
         <span>Portada del canal</span>
       </div>
 
-      {}
       <header className="profile-header">
         <div
           className="profile-avatar"
@@ -45,11 +53,13 @@ function ProfilePage() {
         </div>
       </header>
 
-      {}
       <hr className="profile-divider" />
 
-      {}
-      <ShortsGrid shorts={profileData.shorts} />
+      <ShortsGrid
+        shorts={shorts}
+        state={state}
+        onRetry={retry}
+      />
     </section>
   )
 }

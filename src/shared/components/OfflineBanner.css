@@ -1,0 +1,40 @@
+/* Estilos del aviso reutilizable sin conexión. */
+
+.offline-banner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  width: 100%;
+  box-sizing: border-box;
+  background-color: #E3DCC2;
+  color: #44581F;
+  font-family: 'Nunito', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  text-align: center;
+}
+
+.offline-banner--page {
+  min-height: 35px;
+  padding: 7px 14px;
+  margin: -22px -24px 12px;
+  width: calc(100% + 48px);
+}
+
+.offline-banner--inline {
+  min-height: 42px;
+  padding: 10px 14px;
+  border-radius: 8px;
+}
+
+.offline-banner svg {
+  flex-shrink: 0;
+}
+
+@media (max-width: 700px) {
+  .offline-banner--page {
+    margin: -14px -14px 0;
+    width: calc(100% + 28px);
+  }
+}

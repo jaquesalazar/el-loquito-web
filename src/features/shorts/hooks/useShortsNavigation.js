@@ -1,3 +1,5 @@
+/* Hook para navegar entre Shorts mediante botones, teclado y rueda del mouse. */
+
 import { useCallback, useEffect, useRef, useState } from 'react'
 
 export function useShortsNavigation(totalShorts) {
@@ -6,10 +8,14 @@ export function useShortsNavigation(totalShorts) {
 
   const lastNavigationRef = useRef(0)
 
-  const isFirst = currentIndex === 0
-  const isLast = currentIndex >= totalShorts - 1
+  const safeIndex = Math.min(
+    currentIndex,
+    Math.max(0, totalShorts - 1)
+  )
 
-  // Cambiar al short indicado
+  const isFirst = safeIndex === 0
+  const isLast = totalShorts === 0 || safeIndex >= totalShorts - 1
+
   const goToShort = useCallback(
     (newIndex) => {
       if (newIndex < 0 || newIndex >= totalShorts) {
@@ -17,13 +23,16 @@ export function useShortsNavigation(totalShorts) {
       }
 
       setCurrentIndex((previousIndex) => {
-        if (newIndex === previousIndex) {
-          return previousIndex
+        const previousSafeIndex = Math.min(
+          previousIndex,
+          Math.max(0, totalShorts - 1)
+        )
+
+        if (newIndex === previousSafeIndex) {
+          return previousSafeIndex
         }
 
-        setDirection(
-          newIndex > previousIndex ? 'down' : 'up'
-        )
+        setDirection(newIndex > previousSafeIndex ? 'down' : 'up')
 
         return newIndex
       })
@@ -31,36 +40,42 @@ export function useShortsNavigation(totalShorts) {
     [totalShorts]
   )
 
-  // Ir al siguiente short
   const nextShort = useCallback(() => {
     setCurrentIndex((previousIndex) => {
-      if (previousIndex >= totalShorts - 1) {
-        return previousIndex
+      const previousSafeIndex = Math.min(
+        previousIndex,
+        Math.max(0, totalShorts - 1)
+      )
+
+      if (totalShorts === 0 || previousSafeIndex >= totalShorts - 1) {
+        return previousSafeIndex
       }
 
       setDirection('down')
-      return previousIndex + 1
+      return previousSafeIndex + 1
     })
   }, [totalShorts])
 
-  // Regresar al short anterior
   const previousShort = useCallback(() => {
     setCurrentIndex((previousIndex) => {
-      if (previousIndex <= 0) {
-        return previousIndex
+      const previousSafeIndex = Math.min(
+        previousIndex,
+        Math.max(0, totalShorts - 1)
+      )
+
+      if (previousSafeIndex <= 0) {
+        return 0
       }
 
       setDirection('up')
-      return previousIndex - 1
+      return previousSafeIndex - 1
     })
-  }, [])
+  }, [totalShorts])
 
-  // Navegación mediante teclado
   useEffect(() => {
     function handleKeyDown(event) {
       const element = event.target
 
-      // No interferir mientras alguien escribe
       if (
         element instanceof HTMLElement &&
         (
@@ -89,10 +104,8 @@ export function useShortsNavigation(totalShorts) {
     }
   }, [nextShort, previousShort])
 
-  // Navegación mediante rueda del mouse
   useEffect(() => {
     function handleWheel(event) {
-      // Permitir el scroll dentro del panel de comentarios
       if (event.target instanceof Element) {
         if (event.target.closest('.comments-list')) {
           return
@@ -105,7 +118,6 @@ export function useShortsNavigation(totalShorts) {
 
       const now = Date.now()
 
-      // Evita saltar varios shorts con un solo movimiento
       if (now - lastNavigationRef.current < 650) {
         return
       }
@@ -131,7 +143,7 @@ export function useShortsNavigation(totalShorts) {
   }, [nextShort, previousShort])
 
   return {
-    currentIndex,
+    currentIndex: safeIndex,
     direction,
     isFirst,
     isLast,
