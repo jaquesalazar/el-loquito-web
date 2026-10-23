@@ -1,4 +1,3 @@
-
 /* Pantalla de Shorts con navegación y estados de carga, error y conexión. */
 
 import { useCallback, useState } from 'react'
