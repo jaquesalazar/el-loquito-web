@@ -1,0 +1,13 @@
+# Archivos y carpetas excluidos de la construcción Docker.
+node_modules
+dist
+.git
+.gitignore
+.vscode
+*.log
+.env
+.env.*
+Dockerfile*
+docker-compose*.yml
+docker-compose*.yaml
+evidencias
