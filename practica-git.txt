@@ -1,2 +1,2 @@
-Práctica Git y Docker - CatTube
+Version A - Trabajo del integrante 1
 Equipo Arcoiris - IDGS102N
