@@ -1,4 +1,4 @@
-/* Menú lateral */
+/* Menú lateral de CatTube con navegación y estado de conexión */
 
 import './Sidebar.css'
 import useOnlineStatus from '../hooks/useOnlineStatus'
@@ -96,9 +96,9 @@ function Sidebar({ currentPage, onNavigate }) {
 
           <button
             type="button"
-            className="menu-item"
-            disabled
-            title="Próximamente"
+            className={`menu-item ${currentPage === 'statistics' ? 'active' : ''}`}
+            aria-current={currentPage === 'statistics' ? 'page' : undefined}
+            onClick={() => onNavigate?.('statistics')}
           >
             <svg
               width="22"

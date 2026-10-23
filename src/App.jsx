@@ -1,9 +1,10 @@
-/* Componente principal de CatTube y navegación */
+/* Componente principal de CatTube y navegación entre pantallas */
 
 import { useState } from 'react'
 import Sidebar from './shared/components/Sidebar'
 import ProfilePage from './features/profile/ProfilePage'
 import ShortsPage from './features/shorts/ShortsPage'
+import StatsPage from './features/stats/StatsPage'
 import './App.css'
 
 function App() {
@@ -17,6 +18,22 @@ function App() {
     setCurrentPage(page)
   }
 
+  function renderPage() {
+    if (currentPage === 'profile') {
+      return <ProfilePage />
+    }
+
+    if (currentPage === 'shorts') {
+      return <ShortsPage onBackToProfile={goToProfile} />
+    }
+
+    if (currentPage === 'statistics') {
+      return <StatsPage onBackToProfile={goToProfile} />
+    }
+
+    return <ProfilePage />
+  }
+
   return (
     <>
       <Sidebar
@@ -25,11 +42,7 @@ function App() {
       />
 
       <main className="main-content">
-        {currentPage === 'profile' ? (
-          <ProfilePage />
-        ) : (
-          <ShortsPage onBackToProfile={goToProfile} />
-        )}
+        {renderPage()}
       </main>
     </>
   )
