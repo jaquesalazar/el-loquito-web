@@ -169,6 +169,17 @@
   outline-offset: 3px;
 }
 
+.shorts-player-offline .shorts-player-retry {
+  background-color: #6E8B3E;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 8px;
+}
+
+.shorts-player-offline .shorts-player-retry:hover {
+  background-color: #44581F;
+}
+
 @keyframes shorts-spinner-rotate {
   to {
     transform: rotate(360deg);

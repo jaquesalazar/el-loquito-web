@@ -49,22 +49,42 @@ function StatsPage({ onBackToProfile }) {
     }
 
     if (state === 'empty' || !hasData) {
-      return (
-        <div className="stats-feedback">
-          <h2>
-            {isOffline
-              ? 'No hay estadísticas guardadas'
-              : 'Aún no hay estadísticas'}
-          </h2>
-          <p>
-            {isOffline
-              ? 'Conéctate a internet para consultar las estadísticas por primera vez.'
-              : 'Los datos aparecerán cuando haya actividad dentro del juego.'}
-          </p>
-        </div>
-      )
-    }
+  return (
+    <div className="stats-feedback">
+      <svg
+        width="52"
+        height="52"
+        viewBox="0 0 64 64"
+        fill="none"
+        aria-hidden="true"
+      >
+        <path
+          d="M12 27 15 8l13 11h8L49 8l3 19v12c0 12-9 19-20 19S12 51 12 39V27Z"
+          fill="#6E8B3E"
+        />
+        <path
+          d="m22 33 5 3m15-3-5 3M29 43l3 3 3-3"
+          stroke="#ECE5D3"
+          strokeWidth="3"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </svg>
 
+      <h2>
+        {isOffline
+          ? 'No hay estadísticas guardadas'
+          : 'Aún no hay estadísticas'}
+      </h2>
+
+      <p>
+        {isOffline
+          ? 'Conéctate a internet para consultar las estadísticas por primera vez.'
+          : 'Los datos aparecerán cuando haya actividad dentro del juego.'}
+      </p>
+    </div>
+  )
+}
     const followers = stats.followers
     const influence = stats.influence
     const money = stats.money

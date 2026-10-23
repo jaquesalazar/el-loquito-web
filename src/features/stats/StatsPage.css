@@ -1,12 +1,10 @@
-/* Estilos de la pantalla de estadísticas de CatTube */
-
 .stats-page {
   width: 100%;
   min-height: 100%;
   padding: 32px 36px 48px;
   background: #ffffff;
   color: #44581f;
-  font-family: Inter, sans-serif;
+  font-family: inherit;
   box-sizing: border-box;
 }
 
@@ -253,7 +251,7 @@
 }
 
 .stats-feedback h2 {
-  margin: 0 0 12px;
+  margin: 12px 0 8px;
   color: #44581f;
   font-size: 20px;
 }
