@@ -15,23 +15,20 @@ function ProfilePage() {
     <section className="profile-page">
       {!isOnline && <OfflineBanner variant="page" />}
 
-      <div
-        className="profile-cover"
-        role="img"
-        aria-label="Portada provisional del canal"
-      >
-        <span>Portada del canal</span>
+      <div className="profile-cover">
+        <img
+          src="/images/portada.png"
+          alt="Portada del canal El loquito"
+          className="profile-cover-image"
+        />
       </div>
 
       <header className="profile-header">
-        <div
+        <img
           className="profile-avatar"
-          role="img"
-          aria-label="Avatar provisional de El loquito"
-        >
-          <div className="avatar-head"></div>
-          <div className="avatar-body"></div>
-        </div>
+          src="/images/Avatar.png"
+          alt="Foto de perfil de El loquito"
+        />
 
         <div className="profile-info">
           <h1>{profileData.nombre}</h1>

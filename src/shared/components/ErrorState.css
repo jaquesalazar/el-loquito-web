@@ -1,0 +1,78 @@
+.error-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  width: 100%;
+  min-height: 400px;
+  padding: 32px 20px;
+  box-sizing: border-box;
+  background-color: #F8F9F5;
+  border-radius: 16px;
+  text-align: center;
+  font-family: 'Nunito', sans-serif;
+}
+
+.error-state-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+  background-color: #E8EFDC;
+  color: #6E8B3E;
+}
+
+.error-state-title {
+  margin: 0;
+  color: #26351B;
+  font-family: 'Nunito', sans-serif;
+  font-size: 20px;
+  font-weight: 800;
+  line-height: 1.4;
+}
+
+.error-state-description {
+  margin: 0;
+  max-width: 420px;
+  color: #66715C;
+  font-family: 'Nunito', sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.error-state-button {
+  margin-top: 4px;
+  padding: 11px 26px;
+  border: none;
+  border-radius: 8px;
+  background-color: #6E8B3E;
+  color: #FFFFFF;
+  font-family: 'Nunito', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.error-state-button:hover {
+  background-color: #44581F;
+}
+
+.error-state-button:focus-visible {
+  outline: 3px solid #6E8B3E;
+  outline-offset: 3px;
+}
+
+@media (max-width: 700px) {
+  .error-state {
+    min-height: 320px;
+    padding: 24px 14px;
+  }
+
+  .error-state-title {
+    font-size: 18px;
+  }
+}

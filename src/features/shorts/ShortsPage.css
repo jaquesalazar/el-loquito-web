@@ -149,7 +149,7 @@
   padding: 11px 26px;
   border: none;
   border-radius: 8px;
-  background-color: #3F9A1E;
+  background-color: #6E8B3E;
   color: #FFFFFF;
   font-family: 'Nunito', sans-serif;
   font-size: 14px;
@@ -159,23 +159,12 @@
 }
 
 .shorts-player-retry:hover {
-  background-color: #327C17;
+  background-color: #44581F;
 }
 
 .shorts-player-retry:focus-visible {
-  outline: 3px solid #3F9A1E;
+  outline: 3px solid #6E8B3E;
   outline-offset: 3px;
-}
-
-.shorts-player-offline .shorts-player-retry {
-  background-color: #6E8B3E;
-  color: #FFFFFF;
-  border: none;
-  border-radius: 8px;
-}
-
-.shorts-player-offline .shorts-player-retry:hover {
-  background-color: #44581F;
 }
 
 @keyframes shorts-spinner-rotate {

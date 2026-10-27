@@ -1,5 +1,3 @@
-/* Pantalla de estadísticas del videojuego con gráficas y estados de carga */
-
 import StatCard from './StatCard'
 import FollowersChart from './FollowersChart'
 import InfluenceChart from './InfluenceChart'
@@ -8,6 +6,7 @@ import CohesionChart from './CohesionChart'
 import useStats from './useStats'
 import { formatGameMoney, getMoneyLegend } from './config'
 import OfflineBanner from '../../shared/components/OfflineBanner'
+import ErrorState from '../../shared/components/ErrorState'
 import './StatsPage.css'
 
 const formatNumber = (value) =>
@@ -36,17 +35,17 @@ function StatsPage({ onBackToProfile }) {
       )
     }
 
-    if (state === 'error') {
-      return (
-        <div className="stats-feedback" role="alert">
-          <h2>No pudimos cargar las estadísticas</h2>
-          <p>Ocurrió un problema al consultar los datos del juego.</p>
-          <button type="button" onClick={retry}>
-            Reintentar
-          </button>
-        </div>
-      )
-    }
+    
+  if (state === 'error') {
+    return (
+      <ErrorState
+        title="No pudimos cargar las estadísticas"
+        description="Ocurrió un problema al consultar los datos del juego. Inténtalo nuevamente."
+        onRetry={retry}
+      />
+    )
+  }
+
 
     if (state === 'empty' || !hasData) {
   return (

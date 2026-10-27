@@ -1,5 +1,3 @@
-/* Pantalla de Shorts con navegación y estados de carga, error y conexión. */
-
 import { useCallback, useState } from 'react'
 import { useShortsNavigation } from './hooks/useShortsNavigation'
 import usePlayerShorts from './hooks/usePlayerShorts'
@@ -7,6 +5,7 @@ import ShortPlayer from './components/ShortPlayer'
 import ActionButtons from './components/ActionButtons'
 import CommentsPanel from './components/CommentsPanel'
 import ShortNavigator from './components/ShortNavigator'
+import ErrorState from '../../shared/components/ErrorState'
 import Toast from './components/Toast'
 import './ShortsPage.css'
 
@@ -48,24 +47,23 @@ function ShortsPage({ onBackToProfile }) {
       )
     }
 
+        
     if (status === 'error') {
       return (
-        <div className="shorts-player-state" role="alert">
-          <h2>No pudimos cargar los shorts</h2>
-          <button
-            type="button"
-            className="shorts-player-retry"
-            onClick={retry}
-          >
-            Reintentar
-          </button>
+        <div className="shorts-player-state">
+          <ErrorState
+            title="No pudimos cargar los shorts"
+            description="Ocurrió un problema al reproducir los videos. Inténtalo nuevamente."
+            onRetry={retry}
+          />
         </div>
       )
     }
 
+
     if (status === 'offline') {
       return (
-        <div className="shorts-player-state shorts-player-offline">
+        <div className="shorts-player-state shorts-player-offline" role="status">
           <svg
             width="64"
             height="64"
@@ -87,15 +85,7 @@ function ShortsPage({ onBackToProfile }) {
           </svg>
 
           <h2>Sin conexión a Internet</h2>
-          <p>Comprueba tu conexión e inténtalo nuevamente.</p>
-
-          <button
-            type="button"
-            className="shorts-player-retry"
-            onClick={retry}
-          >
-            Reintentar
-          </button>
+          <p>Los shorts se cargarán automáticamente cuando recuperes la conexión.</p>
         </div>
       )
     }
