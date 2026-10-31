@@ -1,4 +1,5 @@
-/* Estilos del menú lateral */
+
+/* Estilos del menú lateral y del modal de descarga de CatTube. */
 
 .sidebar {
   position: fixed;
@@ -71,16 +72,10 @@
   color: #ece5d3;
 }
 
-.menu-item:focus-visible {
+.menu-item:focus-visible,
+.install-button:focus-visible {
   outline: 3px solid #d9a441;
   outline-offset: 2px;
-}
-
-.menu-item:disabled {
-  background-color: #35491a;
-  color: #ece5d3;
-  opacity: 1;
-  cursor: not-allowed;
 }
 
 .sidebar-bottom {
@@ -104,13 +99,12 @@
   font-size: 15px;
   font-weight: 700;
   text-align: left;
-  cursor: not-allowed;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
 }
 
-.install-button:disabled {
-  background-color: #35491a;
-  color: #ece5d3;
-  opacity: 1;
+.install-button:hover {
+  background-color: #6e8b3e;
 }
 
 .sidebar-divider {
@@ -139,7 +133,223 @@
 }
 
 .status-dot-offline {
-  background-color: #DC4545;
+  background-color: #dc4545;
+}
+
+/* Modal de descarga */
+
+.install-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  box-sizing: border-box;
+  background: rgba(29, 38, 20, 0.62);
+  backdrop-filter: blur(5px);
+  animation: install-overlay-appear 0.2s ease;
+}
+
+.install-modal {
+  position: relative;
+  width: 100%;
+  max-width: 460px;
+  padding: 42px 40px 32px;
+  box-sizing: border-box;
+  overflow: hidden;
+  background: #fffdf7;
+  border: 1px solid rgba(68, 88, 31, 0.12);
+  border-radius: 20px;
+  box-shadow: 0 24px 70px rgba(20, 30, 12, 0.25);
+  text-align: center;
+  animation: install-modal-appear 0.25s ease;
+}
+
+.install-modal::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 5px;
+  background: #6e8b3e;
+}
+
+.install-modal-close {
+  position: absolute;
+  top: 17px;
+  right: 18px;
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: 1px solid #e6e4d9;
+  border-radius: 50%;
+  color: #596344;
+  font-family: Arial, sans-serif;
+  font-size: 23px;
+  line-height: 1;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.install-modal-close:hover {
+  background: #f0f1e9;
+  color: #35491a;
+}
+
+.install-modal-icon {
+  width: 82px;
+  height: 82px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 23px;
+  background: #edf1e4;
+  border: 1px solid #e0e8d2;
+  border-radius: 22px;
+}
+
+.install-modal-icon svg {
+  width: 58px;
+  height: 58px;
+}
+
+.install-modal-eyebrow {
+  display: block;
+  margin-bottom: 11px;
+  color: #6e8b3e;
+  font-family: 'Nunito', sans-serif;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 1.8px;
+}
+
+.install-modal h2 {
+  max-width: 350px;
+  margin: 0 auto 14px;
+  color: #35491a;
+  font-family: 'Nunito', sans-serif;
+  font-size: 26px;
+  font-weight: 900;
+  line-height: 1.25;
+}
+
+.install-modal-description {
+  max-width: 350px;
+  margin: 0 auto 27px;
+  color: #6b705e;
+  font-family: 'Nunito', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.7;
+}
+
+.install-modal-download {
+  min-height: 54px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 11px;
+  padding: 13px 20px;
+  box-sizing: border-box;
+  background: #6e8b3e;
+  border: 1px solid #6e8b3e;
+  border-radius: 11px;
+  color: #fffdf7;
+  font-family: 'Nunito', sans-serif;
+  font-size: 15px;
+  font-weight: 900;
+  text-decoration: none;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.install-modal-download:hover {
+  background: #526c2c;
+  border-color: #526c2c;
+  transform: translateY(-1px);
+}
+
+.install-modal-download span {
+  font-size: 21px;
+  line-height: 1;
+}
+
+.install-modal-availability {
+  display: block;
+  margin-top: 13px;
+  color: #858978;
+  font-family: 'Nunito', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.install-modal-warning {
+  display: flex;
+  align-items: flex-start;
+  gap: 11px;
+  margin-top: 27px;
+  padding: 14px 15px;
+  background: #f7f3e8;
+  border: 1px solid #e9dfc6;
+  border-radius: 11px;
+  text-align: left;
+}
+
+.install-modal-warning-icon {
+  width: 21px;
+  height: 21px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #e8d6a9;
+  border-radius: 50%;
+  color: #685324;
+  font-family: 'Nunito', sans-serif;
+  font-size: 13px;
+  font-weight: 900;
+}
+
+.install-modal-warning p {
+  margin: 0;
+  color: #70664e;
+  font-family: 'Nunito', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.6;
+}
+
+.install-modal-close:focus-visible,
+.install-modal-download:focus-visible {
+  outline: 3px solid #d9a441;
+  outline-offset: 3px;
+}
+
+@keyframes install-overlay-appear {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes install-modal-appear {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @media (max-width: 700px) {
@@ -168,10 +378,27 @@
     justify-content: center;
     padding-left: 0;
   }
+
+  .install-modal {
+    max-width: 400px;
+    padding: 38px 24px 25px;
+  }
+
+  .install-modal h2 {
+    font-size: 23px;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .menu-item {
+  .menu-item,
+  .install-button,
+  .install-modal-download,
+  .install-modal-close {
     transition: none;
+  }
+
+  .install-modal-overlay,
+  .install-modal {
+    animation: none;
   }
 }
