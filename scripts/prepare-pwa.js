@@ -1,4 +1,3 @@
-
 /* Prepara la caché de producción de CatTube con los archivos generados por Vite. */
 
 import { readdir, readFile, writeFile } from 'node:fs/promises'
@@ -41,7 +40,8 @@ async function preparePWA() {
         path === 'offline.html' ||
         path === 'manifest.webmanifest' ||
         path.startsWith('assets/') ||
-        path.startsWith('icons/')
+        path.startsWith('icons/') ||
+        path.startsWith('images/')
       )
     })
     .map((path) => `/${path}`)

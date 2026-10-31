@@ -1,3 +1,5 @@
+/* Pantalla de reproducción de Shorts con soporte para contenido guardado sin conexión. */
+
 import { useCallback, useState } from 'react'
 import { useShortsNavigation } from './hooks/useShortsNavigation'
 import usePlayerShorts from './hooks/usePlayerShorts'
@@ -6,6 +8,7 @@ import ActionButtons from './components/ActionButtons'
 import CommentsPanel from './components/CommentsPanel'
 import ShortNavigator from './components/ShortNavigator'
 import ErrorState from '../../shared/components/ErrorState'
+import OfflineBanner from '../../shared/components/OfflineBanner'
 import Toast from './components/Toast'
 import './ShortsPage.css'
 
@@ -40,14 +43,20 @@ function ShortsPage({ onBackToProfile }) {
   function renderContent() {
     if (status === 'loading') {
       return (
-        <div className="shorts-player-state" role="status" aria-live="polite">
-          <span className="shorts-loading-spinner" aria-hidden="true"></span>
+        <div
+          className="shorts-player-state"
+          role="status"
+          aria-live="polite"
+        >
+          <span
+            className="shorts-loading-spinner"
+            aria-hidden="true"
+          ></span>
           <p>Cargando shorts...</p>
         </div>
       )
     }
 
-        
     if (status === 'error') {
       return (
         <div className="shorts-player-state">
@@ -60,37 +69,7 @@ function ShortsPage({ onBackToProfile }) {
       )
     }
 
-
-    if (status === 'offline') {
-      return (
-        <div className="shorts-player-state shorts-player-offline" role="status">
-          <svg
-            width="64"
-            height="64"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="#6E8B3E"
-            strokeWidth="1.8"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            aria-hidden="true"
-          >
-            <path d="M12 20h.01" />
-            <path d="M8.5 16.5a5 5 0 0 1 7 0" />
-            <path d="M5 12.5a10 10 0 0 1 4-2" />
-            <path d="M15 10.5a10 10 0 0 1 4 2" />
-            <path d="M2 8.5a15 15 0 0 1 4-2.5" />
-            <path d="M18 6a15 15 0 0 1 4 2.5" />
-            <path d="M3 3 21 21" />
-          </svg>
-
-          <h2>Sin conexión a Internet</h2>
-          <p>Los shorts se cargarán automáticamente cuando recuperes la conexión.</p>
-        </div>
-      )
-    }
-
-    if (status === 'empty' || !currentShort) {
+    if (status === 'empty' || shorts.length === 0) {
       return (
         <div className="shorts-player-state">
           <svg
@@ -119,8 +98,18 @@ function ShortsPage({ onBackToProfile }) {
       )
     }
 
+    if (!currentShort) {
+      return null
+    }
+
     return (
       <>
+        {status === 'offline' && (
+          <div className="offline-banner-spacing">
+            <OfflineBanner variant="inline" />
+          </div>
+        )}
+
         <div className="shorts-page-layout">
           <div
             key={currentShort.id}

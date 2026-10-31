@@ -167,6 +167,45 @@
   outline-offset: 3px;
 }
 
+.shorts-offline-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  width: 100%;
+  max-width: 900px;
+  margin-top: 12px;
+  text-align: left;
+}
+
+.shorts-offline-card {
+  padding: 18px;
+  border: 1px solid #dce3d2;
+  border-radius: 12px;
+  background: #ffffff;
+}
+
+.shorts-offline-card h3 {
+  margin: 0 0 8px;
+  color: #26351b;
+  font-size: 16px;
+}
+
+.shorts-offline-card p {
+  margin: 6px 0;
+  color: #66715c;
+  overflow-wrap: anywhere;
+}
+
+.shorts-offline-card span {
+  color: #6e8b3e;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.offline-banner-spacing {
+  margin-bottom: 24px;
+}
+
 @keyframes shorts-spinner-rotate {
   to {
     transform: rotate(360deg);

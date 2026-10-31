@@ -1,4 +1,4 @@
-/* Cuadrícula de Shorts con estados de carga, error, vacío y conexión. */
+/* Cuadrícula de Shorts del perfil con estados de carga y contenido sin conexión. */
 
 import ShortCard from './ShortCard'
 import OfflineBanner from '../../../shared/components/OfflineBanner'
@@ -8,23 +8,32 @@ import './ShortsGrid.css'
 function ShortsGrid({ shorts = [], state = 'ready', onRetry }) {
   if (state === 'loading') {
     return (
-      <section className="shorts-section" aria-label="Cargando shorts" aria-busy="true">
+      <section
+        className="shorts-section"
+        aria-label="Cargando shorts"
+        aria-busy="true"
+      >
         <div className="shorts-grid">
           {[1, 2, 3].map((item) => (
-            <div className="shorts-skeleton" key={item} aria-hidden="true">
+            <div
+              className="shorts-skeleton"
+              key={item}
+              aria-hidden="true"
+            >
               <div className="shorts-skeleton-image"></div>
               <div className="shorts-skeleton-line"></div>
               <div className="shorts-skeleton-line shorts-skeleton-line--short"></div>
             </div>
           ))}
         </div>
+
         <span className="shorts-sr-only" role="status">
           Cargando shorts
         </span>
       </section>
     )
   }
-  
+
   if (state === 'error') {
     return (
       <section className="shorts-section">
@@ -37,9 +46,13 @@ function ShortsGrid({ shorts = [], state = 'ready', onRetry }) {
     )
   }
 
-  if (state === 'empty' || (state === 'ready' && shorts.length === 0)) {
+  if (state === 'empty' || shorts.length === 0) {
     return (
       <section className="shorts-section shorts-state">
+        {state === 'offline' && (
+          <OfflineBanner variant="inline" />
+        )}
+
         <svg
           width="52"
           height="52"
@@ -59,28 +72,34 @@ function ShortsGrid({ shorts = [], state = 'ready', onRetry }) {
             strokeLinejoin="round"
           />
         </svg>
-        <h2>Aún no hay shorts</h2>
-        <p>Cuando publique shorts, aparecerán aquí.</p>
-      </section>
-    )
-  }
 
-  if (state === 'offline') {
-    return (
-      <section className="shorts-section" aria-label="Shorts sin conexión">
-        <OfflineBanner variant="inline" />
-        <div className="shorts-offline-message">
-          <p>Los shorts no están disponibles sin conexión.</p>
-        </div>
+        <h2>Aún no hay shorts</h2>
+        <p>
+          {state === 'offline'
+            ? 'No hay shorts guardados para mostrar sin conexión.'
+            : 'Cuando se publiquen shorts, aparecerán aquí.'}
+        </p>
       </section>
     )
   }
 
   return (
-    <section className="shorts-section" aria-label="Shorts del perfil">
+    <section
+      className="shorts-section"
+      aria-label="Shorts del perfil"
+    >
+      {state === 'offline' && (
+        <div className="offline-banner-spacing">
+          <OfflineBanner variant="inline" />
+        </div>
+      )}
+
       <div className="shorts-grid">
         {shorts.map((short) => (
-          <ShortCard key={short.idVideo} short={short} />
+          <ShortCard
+            key={short.idVideo ?? short.id}
+            short={short}
+          />
         ))}
       </div>
     </section>

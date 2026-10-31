@@ -52,9 +52,9 @@ function ProfilePage() {
 
       <hr className="profile-divider" />
 
-      <ShortsGrid
+        <ShortsGrid
         shorts={shorts}
-        state={state}
+        state={!isOnline && shorts.length > 0 ? 'ready' : state}
         onRetry={retry}
       />
     </section>

@@ -148,3 +148,6 @@
     scroll-snap-align: start;
   }
 }
+.offline-banner-spacing {
+  margin-bottom: 24px;
+}

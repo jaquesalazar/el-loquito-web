@@ -1,15 +1,21 @@
-
-/* Hook para gestionar los estados de Shorts y permitir pruebas desde la URL. */
+/* Hook para gestionar los Shorts y conservar sus datos sin conexión. */
 
 import { useCallback, useEffect, useState } from 'react'
 import { getShorts } from '../shortsService'
 import useOnlineStatus from '../../../shared/hooks/useOnlineStatus'
 
 const validStates = ['loading', 'ready', 'error', 'empty', 'offline']
+const STORAGE_KEY = 'cattube-profile-shorts'
 
 function useShorts() {
   const isOnline = useOnlineStatus()
-  const [shorts, setShorts] = useState([])
+  const [shorts, setShorts] = useState(() => {
+    try {
+      return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []
+    } catch {
+      return []
+    }
+  })
   const [state, setState] = useState('loading')
   const [retryCount, setRetryCount] = useState(0)
 
@@ -36,7 +42,7 @@ function useShorts() {
       }
 
       if (!isOnline) {
-        setState('offline')
+        setState(shorts.length > 0 ? 'ready' : 'offline')
         return
       }
 
@@ -48,11 +54,12 @@ function useShorts() {
         if (cancelled) return
 
         setShorts(data)
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(data))
         setState(data.length > 0 ? 'ready' : 'empty')
       } catch {
         if (cancelled) return
 
-        setState('error')
+        setState(shorts.length > 0 ? 'ready' : 'error')
       }
     }
 
@@ -66,7 +73,7 @@ function useShorts() {
   return {
     shorts,
     state,
-    retry,
+    retry
   }
 }
 
