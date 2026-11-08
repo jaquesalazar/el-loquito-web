@@ -21,6 +21,24 @@
   justify-content: center;
 }
 
+.short-player-media {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  background-color: #252525;
+}
+
+.short-player-error {
+  position: absolute;
+  z-index: 2;
+  color: #ffffff;
+  text-align: center;
+  padding: 20px;
+  font-family: 'Nunito', sans-serif;
+}
+
 .short-player-play {
   width: 64px;
   height: 64px;

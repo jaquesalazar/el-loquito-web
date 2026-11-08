@@ -1,4 +1,3 @@
-
 import { useRef, useState } from 'react'
 import './CommentInput.css'
 
@@ -8,6 +7,7 @@ function CommentInput({
   onReplyHandled
 }) {
   const [message, setMessage] = useState('')
+  const [isSubmitting, setIsSubmitting] = useState(false)
   const inputRef = useRef(null)
 
   const displayMessage = replyTo
@@ -31,20 +31,26 @@ function CommentInput({
     }
   }
 
-
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault()
 
     const cleanMessage = displayMessage.trim()
 
-    if (!cleanMessage) return
+    if (!cleanMessage || isSubmitting) return
 
-    onAddComment?.(cleanMessage)
+    setIsSubmitting(true)
 
-    setMessage('')
-    onReplyHandled?.()
+    try {
+      const result = await onAddComment?.(cleanMessage)
 
-    inputRef.current?.focus()
+      if (result === false) return
+
+      setMessage('')
+      onReplyHandled?.()
+      inputRef.current?.focus()
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
@@ -67,7 +73,7 @@ function CommentInput({
         type="submit"
         className="comment-send-button"
         aria-label="Enviar comentario"
-        disabled={!displayMessage.trim()}
+        disabled={!displayMessage.trim() || isSubmitting}
       >
         <svg
           viewBox="0 0 24 24"

@@ -1,5 +1,29 @@
+// Componente visual de cada comentario de CatTube.
+
 import { useState } from 'react'
 import './CommentItem.css'
+
+const avatarColors = [
+  '#8b6caf',
+  '#c17b59',
+  '#528b9a',
+  '#bd7190',
+  '#7d9652',
+  '#b18b42',
+  '#6278aa',
+  '#a66c54',
+  '#648f7a',
+  '#9876a8'
+]
+
+function getAvatarColor(username) {
+  const total = [...username].reduce(
+    (sum, character) => sum + character.charCodeAt(0),
+    0
+  )
+
+  return avatarColors[total % avatarColors.length]
+}
 
 function CommentItem({ comment, onReply }) {
   const [liked, setLiked] = useState(false)
@@ -12,6 +36,8 @@ function CommentItem({ comment, onReply }) {
     .charAt(0)
     .toUpperCase()
 
+  const avatarColor = getAvatarColor(comment.usuario)
+
   function handleLike() {
     setLiked((previous) => !previous)
   }
@@ -22,19 +48,29 @@ function CommentItem({ comment, onReply }) {
 
   return (
     <article className="comment-item">
-
-      {}
-      <div className="comment-avatar" aria-hidden="true">
-        {initial}
+      <div
+        className="comment-avatar"
+        style={!comment.avatar ? { backgroundColor: avatarColor } : undefined}
+        aria-hidden="true"
+      >
+        {comment.avatar ? (
+          <img src={comment.avatar} alt="" />
+        ) : (
+          initial
+        )}
       </div>
 
-      {}
       <div className="comment-content">
-
         <div className="comment-header">
           <span className="comment-username">
             {comment.usuario}
           </span>
+
+          {comment.esCreador && (
+            <span className="comment-creator-label">
+              (Creador)
+            </span>
+          )}
 
           <span className="comment-time">
             {comment.tiempo}
@@ -46,8 +82,6 @@ function CommentItem({ comment, onReply }) {
         </p>
 
         <div className="comment-footer">
-
-          {}
           <button
             type="button"
             className="comment-reply-button"
@@ -56,7 +90,6 @@ function CommentItem({ comment, onReply }) {
             Responder
           </button>
 
-          {}
           {comment.id === 1 && (
             <button
               type="button"
@@ -71,10 +104,8 @@ function CommentItem({ comment, onReply }) {
           )}
         </div>
 
-        {}
         {comment.id === 1 && showReplies && (
           <div className="comment-replies">
-
             <div className="comment-reply">
               <strong>@miko</strong>
               <p>
@@ -88,12 +119,10 @@ function CommentItem({ comment, onReply }) {
                 Es el verdadero dueño de la casa.
               </p>
             </div>
-
           </div>
         )}
       </div>
 
-      {}
       <div className="comment-like-container">
         <button
           type="button"
@@ -125,7 +154,6 @@ function CommentItem({ comment, onReply }) {
           {totalLikes}
         </span>
       </div>
-
     </article>
   )
 }
