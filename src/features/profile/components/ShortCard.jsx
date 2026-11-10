@@ -1,7 +1,8 @@
-import { useState } from 'react'
+// Tarjeta de video del perfil con vista previa y estadísticas del jugador.
+
 import './ShortCard.css'
 
-function formatNumber(number) {
+function formatNumber(number = 0) {
   if (number >= 1000) {
     return `${(number / 1000).toLocaleString('es-MX', {
       maximumFractionDigits: 1
@@ -48,35 +49,36 @@ function PawIcon() {
   )
 }
 
-function ShortCard({ short }) {
-  const [liked, setLiked] = useState(false)
-
-  const totalLikes = short.likes + (liked ? 1 : 0)
-
-  function handleLike() {
-    setLiked((previousLiked) => !previousLiked)
-  }
-
+function ShortCard({ short, onOpenShort }) {
   return (
     <article className="short-card">
-      <div className="short-thumbnail">
-        <div
-          className="short-placeholder"
-          role="img"
-          aria-label={`Miniatura provisional de ${short.titulo}`}
-        >
-          <span className="short-person-head"></span>
-          <span className="short-person-body"></span>
-        </div>
-
-        <button
-          type="button"
-          className="short-play"
-          aria-label={`Reproducir ${short.titulo}, próximamente`}
-          disabled
-        >
-          ▶
-        </button>
+      <button
+        type="button"
+        className="short-thumbnail"
+        onClick={() => onOpenShort?.(short.id)}
+        aria-label={`Abrir el video ${short.titulo}`}
+      >
+        {short.videoUrl ? (
+          <video
+            className="short-thumbnail-video"
+            src={short.videoUrl}
+            muted
+            autoPlay
+            loop
+            playsInline
+            preload="metadata"
+            aria-hidden="true"
+          />
+        ) : (
+          <div
+            className="short-placeholder"
+            role="img"
+            aria-label={`Video no disponible: ${short.titulo}`}
+          >
+            <span className="short-person-head"></span>
+            <span className="short-person-body"></span>
+          </div>
+        )}
 
         <div className="short-metrics">
           <span className="short-views">
@@ -84,26 +86,16 @@ function ShortCard({ short }) {
             {formatNumber(short.vistas)}
           </span>
 
-          <button
-            type="button"
-            className={`short-like ${liked ? 'liked' : ''}`}
-            onClick={handleLike}
-            aria-pressed={liked}
-            aria-label={
-              liked
-                ? `Quitar me gusta de ${short.titulo}`
-                : `Dar me gusta a ${short.titulo}`
-            }
-          >
+          <span className={`short-like ${short.liked ? "liked" : ""}`}>
             <PawIcon />
-            <span>{formatNumber(totalLikes)}</span>
-          </button>
+            {formatNumber(short.totalLikes ?? (short.likes + (short.liked ? 1 : 0)))}
+          </span>
         </div>
-      </div>
+      </button>
 
       <div className="short-details">
         <h3>{short.titulo}</h3>
-        <p>{short.fechaTexto}</p>
+        <p className="short-date">{short.fechaTexto}</p>
       </div>
     </article>
   )

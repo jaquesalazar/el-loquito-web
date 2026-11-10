@@ -5,7 +5,7 @@ import OfflineBanner from '../../../shared/components/OfflineBanner'
 import ErrorState from '../../../shared/components/ErrorState'
 import './ShortsGrid.css'
 
-function ShortsGrid({ shorts = [], state = 'ready', onRetry }) {
+function ShortsGrid({ shorts = [], state = 'ready', onRetry, onOpenShort }) {
   if (state === 'loading') {
     return (
       <section
@@ -99,6 +99,7 @@ function ShortsGrid({ shorts = [], state = 'ready', onRetry }) {
           <ShortCard
             key={short.idVideo ?? short.id}
             short={short}
+            onOpenShort={onOpenShort}
           />
         ))}
       </div>

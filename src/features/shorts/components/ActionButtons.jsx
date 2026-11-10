@@ -1,4 +1,7 @@
-import { useState } from 'react'
+// Acciones de interacción para cada video de CatTube.
+
+import { useEffect, useState } from 'react'
+import { updateVideoLike } from '../shortsService'
 import './ActionButtons.css'
 
 function formatNumber(number) {
@@ -42,7 +45,6 @@ function ShareIcon() {
   )
 }
 
-
 function BookmarkIcon({ filled }) {
   return (
     <svg
@@ -59,14 +61,31 @@ function BookmarkIcon({ filled }) {
   )
 }
 
-function ActionButtons({ short, onToast }) {
-  const [liked, setLiked] = useState(false)
+function ActionButtons({ short, idUsuario, onToast }) {
+  const [liked, setLiked] = useState(Boolean(short.liked))
   const [saved, setSaved] = useState(false)
+  const [updatingLike, setUpdatingLike] = useState(false)
+
+  useEffect(() => {
+    setLiked(Boolean(short.liked))
+  }, [short.id, short.liked])
 
   const totalLikes = short.likes + (liked ? 1 : 0)
 
-  function handleLike() {
-    setLiked((previous) => !previous)
+  async function handleLike() {
+    if (updatingLike) return
+
+    const nextLiked = !liked
+    setUpdatingLike(true)
+
+    try {
+      const progress = await updateVideoLike(idUsuario, short.id, nextLiked)
+      setLiked(progress.liked)
+    } catch {
+      onToast?.('No se pudo actualizar el me gusta')
+    } finally {
+      setUpdatingLike(false)
+    }
   }
 
   function handleSave() {
@@ -89,13 +108,12 @@ function ActionButtons({ short, onToast }) {
 
   return (
     <div className="short-actions" aria-label="Acciones del short">
-
-      {/* Like */}
       <div className="short-action-group">
         <button
           type="button"
           className={`short-action-button ${liked ? 'is-liked' : ''}`}
           onClick={handleLike}
+          disabled={updatingLike}
           aria-label={liked ? 'Quitar me gusta' : 'Dar me gusta'}
           aria-pressed={liked}
         >
@@ -107,7 +125,6 @@ function ActionButtons({ short, onToast }) {
         </span>
       </div>
 
-      {/* Compartir */}
       <div className="short-action-group">
         <button
           type="button"
@@ -123,7 +140,6 @@ function ActionButtons({ short, onToast }) {
         </span>
       </div>
 
-      {/* Guardar */}
       <div className="short-action-group">
         <button
           type="button"
@@ -139,7 +155,6 @@ function ActionButtons({ short, onToast }) {
           Guardar
         </span>
       </div>
-
     </div>
   )
 }

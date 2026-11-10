@@ -1,10 +1,10 @@
-/* Hook para cargar y conservar los metadatos de Shorts sin conexión. */
+
+// Hook para cargar y conservar los Shorts asignados a cada jugador sin conexión.
 
 import { useCallback, useEffect, useState } from 'react'
 import { getPlayerShorts } from '../shortsService'
 import useOnlineStatus from '../../../shared/hooks/useOnlineStatus'
 
-const CACHE_KEY = 'cattube-shorts-metadata'
 const validStates = ['loading', 'ready', 'error', 'empty', 'offline']
 
 function getForcedState() {
@@ -12,24 +12,28 @@ function getForcedState() {
   return validStates.includes(testState) ? testState : null
 }
 
-function readShortsCache() {
+function getCacheKey(idUsuario) {
+  return `cattube-shorts-metadata-${idUsuario}`
+}
+
+function readShortsCache(idUsuario) {
   try {
-    const saved = localStorage.getItem(CACHE_KEY)
+    const saved = localStorage.getItem(getCacheKey(idUsuario))
     return saved ? JSON.parse(saved) : []
   } catch {
     return []
   }
 }
 
-function saveShortsCache(shorts) {
+function saveShortsCache(idUsuario, shorts) {
   try {
-    localStorage.setItem(CACHE_KEY, JSON.stringify(shorts))
+    localStorage.setItem(getCacheKey(idUsuario), JSON.stringify(shorts))
   } catch {
     return
   }
 }
 
-function usePlayerShorts() {
+function usePlayerShorts(idUsuario) {
   const isOnline = useOnlineStatus()
   const [shorts, setShorts] = useState([])
   const [status, setStatus] = useState('loading')
@@ -51,9 +55,14 @@ function usePlayerShorts() {
     let cancelled = false
 
     async function loadShorts() {
+      if (!idUsuario) {
+        setStatus('error')
+        return
+      }
+
       if (forcedState && forcedState !== 'ready') {
         if (forcedState === 'offline') {
-          setShorts(readShortsCache())
+          setShorts(readShortsCache(idUsuario))
         }
 
         setStatus(forcedState)
@@ -61,25 +70,26 @@ function usePlayerShorts() {
       }
 
       if (!isOnline) {
-        setShorts(readShortsCache())
-        setStatus('offline')
+        const cachedShorts = readShortsCache(idUsuario)
+        setShorts(cachedShorts)
+        setStatus(cachedShorts.length > 0 ? 'offline' : 'offline')
         return
       }
 
       setStatus('loading')
 
       try {
-        const data = await getPlayerShorts()
+        const data = await getPlayerShorts(idUsuario)
 
         if (cancelled) return
 
         setShorts(data)
-        saveShortsCache(data)
+        saveShortsCache(idUsuario, data)
         setStatus(data.length > 0 ? 'ready' : 'empty')
       } catch {
         if (cancelled) return
 
-        const cachedShorts = readShortsCache()
+        const cachedShorts = readShortsCache(idUsuario)
         setShorts(cachedShorts)
         setStatus(cachedShorts.length > 0 ? 'offline' : 'error')
       }
@@ -90,7 +100,7 @@ function usePlayerShorts() {
     return () => {
       cancelled = true
     }
-  }, [isOnline, forcedState, retryCount])
+  }, [idUsuario, isOnline, forcedState, retryCount])
 
   return { shorts, status, retry }
 }

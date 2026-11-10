@@ -25,7 +25,7 @@ function getAvatarColor(username) {
   return avatarColors[total % avatarColors.length]
 }
 
-function CommentItem({ comment, onReply }) {
+function CommentItem({ comment, onReply, onDelete }) {
   const [liked, setLiked] = useState(false)
   const [showReplies, setShowReplies] = useState(false)
 
@@ -44,6 +44,10 @@ function CommentItem({ comment, onReply }) {
 
   function handleReply() {
     onReply?.(comment.usuario)
+  }
+
+  function handleDelete() {
+    onDelete?.(comment)
   }
 
   return (
@@ -89,6 +93,16 @@ function CommentItem({ comment, onReply }) {
           >
             Responder
           </button>
+
+          {comment.idComentario && comment.esCreador && (
+            <button
+              type="button"
+              className="comment-reply-button"
+              onClick={handleDelete}
+            >
+              Eliminar
+            </button>
+          )}
 
           {comment.id === 1 && (
             <button

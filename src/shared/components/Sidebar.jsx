@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import './Sidebar.css'
 import useOnlineStatus from '../hooks/useOnlineStatus'
 
-function Sidebar({ currentPage, onNavigate }) {
+function Sidebar({ currentPage, onNavigate, username, onLogout }) {
   const isOnline = useOnlineStatus()
   const [isInstallModalOpen, setIsInstallModalOpen] = useState(false)
 
@@ -66,6 +66,13 @@ function Sidebar({ currentPage, onNavigate }) {
             </svg>
 
             <span className="logo-text">CatTube</span>
+          </div>
+
+          <div className="sidebar-player">
+            <span className="sidebar-player-label">JUGADOR CONECTADO</span>
+            <span className="sidebar-player-name" title={username}>
+              {username}
+            </span>
           </div>
 
           <nav className="sidebar-menu" aria-label="Menú principal">
@@ -151,6 +158,15 @@ function Sidebar({ currentPage, onNavigate }) {
           >
             <span aria-hidden="true">↓</span>
             <span>Instalar app</span>
+          </button>
+
+          <button
+            type="button"
+            className="logout-button"
+            onClick={onLogout}
+          >
+            <span aria-hidden="true">↪</span>
+            <span>Cerrar sesión</span>
           </button>
 
           <div className="sidebar-divider"></div>

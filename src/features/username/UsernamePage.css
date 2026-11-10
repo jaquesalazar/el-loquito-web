@@ -1,0 +1,166 @@
+/* Estilos de la pantalla de acceso de CatTube */
+
+.username-page {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: #171b12;
+  color: #f5f0e5;
+  font-family: 'Nunito', Arial, sans-serif;
+}
+
+.username-background {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 50% 40%, rgba(110, 139, 62, 0.35), transparent 55%),
+    radial-gradient(ellipse at 15% 85%, rgba(107, 83, 53, 0.4), transparent 45%),
+    linear-gradient(135deg, #202719, #11150f 65%, #292316);
+  transform: scale(1.05);
+}
+
+.username-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.42);
+}
+
+.username-content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: min(90%, 430px);
+  text-align: center;
+  animation: username-appear 0.8s ease both;
+}
+
+.username-title {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #eee5d2;
+  font-family: Georgia, serif;
+  font-size: clamp(2.5rem, 8vw, 4.2rem);
+  font-weight: 700;
+  line-height: 0.95;
+  letter-spacing: -2px;
+  text-shadow: 0 4px 18px rgba(0, 0, 0, 0.55);
+  transform: rotate(-3deg);
+}
+
+.username-title span:last-child {
+  margin-top: 7px;
+  margin-left: 35px;
+  color: #c6d39a;
+}
+
+.username-subtitle {
+  margin: 28px 0 38px;
+  color: rgba(245, 240, 229, 0.75);
+  font-size: 0.95rem;
+  letter-spacing: 2px;
+}
+
+.username-form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 13px;
+}
+
+.username-form label {
+  color: #d6dfb5;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 3px;
+  text-align: left;
+}
+
+.username-form input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 17px 20px;
+  border: 1px solid rgba(238, 229, 210, 0.3);
+  border-radius: 9px;
+  outline: none;
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  font: inherit;
+  font-size: 1rem;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.username-form input::placeholder {
+  color: rgba(245, 240, 229, 0.55);
+}
+
+.username-form input:focus {
+  border-color: #a8bd73;
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.username-form button {
+  margin-top: 8px;
+  padding: 16px 20px;
+  border: none;
+  border-radius: 9px;
+  background: #718b43;
+  color: #fff;
+  font: inherit;
+  font-size: 0.95rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.username-form button:hover:not(:disabled) {
+  background: #829e50;
+  transform: translateY(-2px);
+}
+
+.username-form button:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+
+.username-error {
+  margin: 0;
+  color: #ffb5a9;
+  font-size: 0.85rem;
+  text-align: left;
+}
+
+.username-footer {
+  margin-top: 65px;
+  color: rgba(245, 240, 229, 0.45);
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 4px;
+}
+
+@keyframes username-appear {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-height: 650px) {
+  .username-footer {
+    margin-top: 30px;
+  }
+
+  .username-subtitle {
+    margin: 18px 0 25px;
+  }
+}

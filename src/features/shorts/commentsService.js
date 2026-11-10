@@ -2,8 +2,10 @@
 
 import { apiRequest } from '../../shared/services/apiClient'
 
-export function getComments(videoId) {
-  return apiRequest(`/videos/${videoId}/comentarios`)
+export function getComments(videoId, idUsuario) {
+  return apiRequest(
+    `/videos/${videoId}/comentarios?idUsuario=${idUsuario}`
+  )
 }
 
 export function createComment(videoId, idUsuario, texto) {
@@ -13,9 +15,9 @@ export function createComment(videoId, idUsuario, texto) {
   })
 }
 
-export function deleteComment(videoId, commentId, userId) {
+export function deleteComment(videoId, commentId, idUsuario) {
   return apiRequest(
-    `/videos/${videoId}/comentarios/${commentId}?idUsuario=${userId}`,
+    `/videos/${videoId}/comentarios/${commentId}?idUsuario=${idUsuario}`,
     { method: 'DELETE' }
   )
 }

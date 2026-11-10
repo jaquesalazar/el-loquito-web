@@ -1,21 +1,26 @@
-/* Hook para gestionar los Shorts y conservar sus datos sin conexión. */
+// Hook para gestionar los Shorts de cada jugador y conservarlos sin conexión.
 
 import { useCallback, useEffect, useState } from 'react'
 import { getShorts } from '../shortsService'
 import useOnlineStatus from '../../../shared/hooks/useOnlineStatus'
 
 const validStates = ['loading', 'ready', 'error', 'empty', 'offline']
-const STORAGE_KEY = 'cattube-profile-shorts'
 
-function useShorts() {
+function getStorageKey(idUsuario) {
+  return `cattube-profile-shorts-${idUsuario}`
+}
+
+function readShortsCache(idUsuario) {
+  try {
+    return JSON.parse(localStorage.getItem(getStorageKey(idUsuario))) || []
+  } catch {
+    return []
+  }
+}
+
+function useShorts(idUsuario) {
   const isOnline = useOnlineStatus()
-  const [shorts, setShorts] = useState(() => {
-    try {
-      return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []
-    } catch {
-      return []
-    }
-  })
+  const [shorts, setShorts] = useState(() => readShortsCache(idUsuario))
   const [state, setState] = useState('loading')
   const [retryCount, setRetryCount] = useState(0)
 
@@ -36,30 +41,39 @@ function useShorts() {
     let cancelled = false
 
     async function loadShorts() {
+      if (!idUsuario) {
+        setState('error')
+        return
+      }
+
       if (forcedState && forcedState !== 'ready') {
         setState(forcedState)
         return
       }
 
       if (!isOnline) {
-        setState(shorts.length > 0 ? 'ready' : 'offline')
+        const cachedShorts = readShortsCache(idUsuario)
+        setShorts(cachedShorts)
+        setState(cachedShorts.length > 0 ? 'ready' : 'offline')
         return
       }
 
       setState('loading')
 
       try {
-        const data = await getShorts()
+        const data = await getShorts(idUsuario)
 
         if (cancelled) return
 
         setShorts(data)
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(data))
+        localStorage.setItem(getStorageKey(idUsuario), JSON.stringify(data))
         setState(data.length > 0 ? 'ready' : 'empty')
       } catch {
         if (cancelled) return
 
-        setState(shorts.length > 0 ? 'ready' : 'error')
+        const cachedShorts = readShortsCache(idUsuario)
+        setShorts(cachedShorts)
+        setState(cachedShorts.length > 0 ? 'ready' : 'error')
       }
     }
 
@@ -68,7 +82,7 @@ function useShorts() {
     return () => {
       cancelled = true
     }
-  }, [isOnline, forcedState, retryCount])
+  }, [idUsuario, isOnline, forcedState, retryCount])
 
   return {
     shorts,

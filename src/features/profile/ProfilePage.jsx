@@ -1,15 +1,17 @@
-/* Pantalla de perfil de CatTube con aviso de conexión. */
+// Pantalla de perfil de CatTube con datos reales del jugador.
 
-import { profileData } from './data'
 import ShortsGrid from './components/ShortsGrid'
 import OfflineBanner from '../../shared/components/OfflineBanner'
 import useOnlineStatus from '../../shared/hooks/useOnlineStatus'
 import useShorts from '../shorts/hooks/useShorts'
 import './ProfilePage.css'
 
-function ProfilePage() {
+function ProfilePage({ player, onOpenShort }) {
   const isOnline = useOnlineStatus()
-  const { shorts, state, retry } = useShorts()
+  const { shorts, state, retry } = useShorts(player?.idUsuario)
+
+  const username = player?.username || ''
+  const seguidores = player?.seguidores ?? 0
 
   return (
     <section className="profile-page">
@@ -31,31 +33,31 @@ function ProfilePage() {
         />
 
         <div className="profile-info">
-          <h1>{profileData.nombre}</h1>
+          <h1>El loquito</h1>
 
           <p className="profile-stats">
-            {profileData.usuario}
+            @{username}
             <span>•</span>
-            {(profileData.suscriptores / 1000).toLocaleString('es-MX', {
-              minimumFractionDigits: 1,
-              maximumFractionDigits: 1
-            })} mil suscriptores
+            {seguidores.toLocaleString('es-MX')} suscriptores
             <span>•</span>
-            {profileData.totalShorts} shorts
+            {shorts.length.toLocaleString('es-MX')} shorts
           </p>
 
           <p className="profile-bio">
-            {profileData.biografia}
+            Las palomas no son lo que paresen... los gatos trabajan para el
+            govierno y la luna me manda señales por el microondas. No estoy
+            loco, tengo pruevas.
           </p>
         </div>
       </header>
 
       <hr className="profile-divider" />
 
-        <ShortsGrid
+      <ShortsGrid
         shorts={shorts}
         state={!isOnline && shorts.length > 0 ? 'ready' : state}
         onRetry={retry}
+        onOpenShort={onOpenShort}
       />
     </section>
   )

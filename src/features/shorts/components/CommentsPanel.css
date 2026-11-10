@@ -113,3 +113,128 @@
     padding: 0 12px;
   }
 }
+
+/* Ventana de confirmación para eliminar comentarios */
+
+.delete-confirm-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 20px;
+
+  background: rgba(35, 40, 28, 0.45);
+  backdrop-filter: blur(3px);
+}
+
+.delete-confirm-modal {
+  width: 100%;
+  max-width: 370px;
+  padding: 28px;
+
+  background: #ffffff;
+  border: 1px solid #e9e9e4;
+  border-radius: 20px;
+
+  box-shadow: 0 15px 45px rgba(0, 0, 0, 0.18);
+
+  text-align: center;
+  font-family: 'Nunito', sans-serif;
+  animation: deleteModalAppear 0.2s ease-out;
+}
+
+.delete-confirm-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 58px;
+  height: 58px;
+  margin: 0 auto 16px;
+
+  background: #f1f4e9;
+  border-radius: 50%;
+
+  font-size: 28px;
+}
+
+.delete-confirm-modal h3 {
+  margin: 0 0 9px;
+
+  color: #292929;
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.delete-confirm-modal p {
+  margin: 0 0 24px;
+
+  color: #77776f;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.delete-confirm-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.delete-confirm-actions button {
+  flex: 1;
+  min-height: 42px;
+  padding: 10px 14px;
+
+  border: none;
+  border-radius: 12px;
+
+  font-family: 'Nunito', sans-serif;
+  font-size: 14px;
+  font-weight: 800;
+
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.delete-confirm-cancel {
+  background: #f1f1ed;
+  color: #55554e;
+}
+
+.delete-confirm-cancel:hover {
+  background: #e7e7e0;
+}
+
+.delete-confirm-accept {
+  background: #6e8b3e;
+  color: #ffffff;
+}
+
+.delete-confirm-accept:hover {
+  background: #566f2f;
+}
+
+.delete-confirm-actions button:active {
+  transform: scale(0.97);
+}
+
+@keyframes deleteModalAppear {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.97);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media (max-width: 400px) {
+  .delete-confirm-modal {
+    padding: 23px 18px;
+  }
+}

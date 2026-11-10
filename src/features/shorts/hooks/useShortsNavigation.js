@@ -1,9 +1,9 @@
-/* Hook para navegar entre Shorts mediante botones, teclado y rueda del mouse. */
+// Hook para navegar entre Shorts mediante botones, teclado y rueda del mouse.
 
 import { useCallback, useEffect, useRef, useState } from 'react'
 
-export function useShortsNavigation(totalShorts) {
-  const [currentIndex, setCurrentIndex] = useState(0)
+export function useShortsNavigation(totalShorts, initialIndex = 0) {
+  const [currentIndex, setCurrentIndex] = useState(initialIndex)
   const [direction, setDirection] = useState('down')
 
   const lastNavigationRef = useRef(0)
@@ -15,6 +15,16 @@ export function useShortsNavigation(totalShorts) {
 
   const isFirst = safeIndex === 0
   const isLast = totalShorts === 0 || safeIndex >= totalShorts - 1
+
+  useEffect(() => {
+    const validIndex = Math.min(
+      Math.max(initialIndex, 0),
+      Math.max(0, totalShorts - 1)
+    )
+
+    setCurrentIndex(validIndex)
+    setDirection('down')
+  }, [initialIndex, totalShorts])
 
   const goToShort = useCallback(
     (newIndex) => {

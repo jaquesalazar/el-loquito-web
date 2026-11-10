@@ -2,12 +2,10 @@
 
 import { useEffect, useState } from 'react'
 import { useRandomComments } from '../hooks/useRandomComments'
-import { getComments, createComment } from '../commentsService'
+import { getComments, createComment, deleteComment } from '../commentsService'
 import CommentItem from './CommentItem'
 import CommentInput from './CommentInput'
 import './CommentsPanel.css'
-
-const CURRENT_USER_ID = 1
 
 function formatCommentTime(createdAt, currentTime) {
   const date = new Date(createdAt)
@@ -30,11 +28,13 @@ function formatCommentTime(createdAt, currentTime) {
   })
 }
 
-function mapComment(comment) {
-  const isCreator = comment.idUsuario === CURRENT_USER_ID
+function mapComment(comment, idUsuario) {
+  const isCreator = comment.idUsuario === idUsuario
 
   return {
     id: `db-${comment.idComentario}`,
+    idComentario: comment.idComentario,
+    idUsuario: comment.idUsuario,
     usuario: `@${comment.username.replace(/^@/, '')}`,
     esCreador: isCreator,
     avatar: isCreator ? '/images/Avatar.png' : null,
@@ -45,7 +45,7 @@ function mapComment(comment) {
   }
 }
 
-function CommentsPanel({ shortId }) {
+function CommentsPanel({ shortId, idUsuario }) {
   const randomComments = useRandomComments(shortId)
 
   const [savedComments, setSavedComments] = useState([])
@@ -53,6 +53,8 @@ function CommentsPanel({ shortId }) {
   const [error, setError] = useState('')
   const [isLoading, setIsLoading] = useState(true)
   const [currentTime, setCurrentTime] = useState(0)
+  const [commentToDelete, setCommentToDelete] = useState(null)
+  const [isDeleting, setIsDeleting] = useState(false)
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -77,10 +79,10 @@ function CommentsPanel({ shortId }) {
       setError('')
 
       try {
-        const response = await getComments(shortId)
+        const response = await getComments(shortId, idUsuario)
 
         if (active) {
-          setSavedComments(response.map(mapComment))
+          setSavedComments(response.map((comment) => mapComment(comment, idUsuario)))
         }
       } catch {
         if (active) {
@@ -93,12 +95,14 @@ function CommentsPanel({ shortId }) {
       }
     }
 
-    loadComments()
+    if (idUsuario) {
+      loadComments()
+    }
 
     return () => {
       active = false
     }
-  }, [shortId])
+  }, [shortId, idUsuario])
 
   const comments = [...savedComments, ...randomComments].map((comment) => ({
     ...comment,
@@ -111,14 +115,10 @@ function CommentsPanel({ shortId }) {
     setError('')
 
     try {
-      const response = await createComment(
-        shortId,
-        CURRENT_USER_ID,
-        message
-      )
+      const response = await createComment(shortId, idUsuario, message)
 
       setSavedComments((previous) => [
-        mapComment(response),
+        mapComment(response, idUsuario),
         ...previous
       ])
 
@@ -127,6 +127,29 @@ function CommentsPanel({ shortId }) {
     } catch {
       setError('No se pudo publicar el comentario. Inténtalo nuevamente.')
       return false
+    }
+  }
+
+  async function handleDeleteComment() {
+    if (!commentToDelete || isDeleting) return
+
+    setIsDeleting(true)
+    setError('')
+
+    try {
+      await deleteComment(shortId, commentToDelete.idComentario, idUsuario)
+
+      setSavedComments((previous) =>
+        previous.filter((comment) =>
+          comment.idComentario !== commentToDelete.idComentario
+        )
+      )
+
+      setCommentToDelete(null)
+    } catch {
+      setError('No se pudo eliminar el comentario.')
+    } finally {
+      setIsDeleting(false)
     }
   }
 
@@ -151,7 +174,9 @@ function CommentsPanel({ shortId }) {
         </span>
       </header>
 
-      {isLoading && <p>Cargando comentarios...</p>}
+      {!idUsuario && <p role="alert">No se pudo identificar al jugador.</p>}
+
+      {isLoading && idUsuario && <p>Cargando comentarios...</p>}
 
       {error && <p role="alert">{error}</p>}
 
@@ -161,6 +186,7 @@ function CommentsPanel({ shortId }) {
             key={comment.id}
             comment={comment}
             onReply={handleReply}
+            onDelete={setCommentToDelete}
           />
         ))}
       </div>
@@ -170,6 +196,57 @@ function CommentsPanel({ shortId }) {
         replyTo={replyTo}
         onReplyHandled={handleReplyHandled}
       />
+
+      {commentToDelete && (
+        <div
+          className="delete-confirm-overlay"
+          onClick={(event) => {
+            if (event.target === event.currentTarget && !isDeleting) {
+              setCommentToDelete(null)
+            }
+          }}
+        >
+          <div
+            className="delete-confirm-modal"
+            role="alertdialog"
+            aria-modal="true"
+            aria-labelledby="delete-confirm-title"
+            aria-describedby="delete-confirm-description"
+          >
+            <div className="delete-confirm-icon" aria-hidden="true">
+              🐾
+            </div>
+
+            <h3 id="delete-confirm-title">
+              ¿Eliminar comentario?
+            </h3>
+
+            <p id="delete-confirm-description">
+              ¿Estás seguro de que quieres eliminar este comentario? Esta acción no se puede deshacer.
+            </p>
+
+            <div className="delete-confirm-actions">
+              <button
+                type="button"
+                className="delete-confirm-cancel"
+                onClick={() => setCommentToDelete(null)}
+                disabled={isDeleting}
+              >
+                Cancelar
+              </button>
+
+              <button
+                type="button"
+                className="delete-confirm-accept"
+                onClick={handleDeleteComment}
+                disabled={isDeleting}
+              >
+                {isDeleting ? 'Eliminando...' : 'Sí, eliminar'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   )
 }

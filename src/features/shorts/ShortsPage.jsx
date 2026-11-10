@@ -1,6 +1,6 @@
-/* Pantalla de reproducción de Shorts con soporte para contenido guardado sin conexión. */
+// Pantalla de reproducción de Shorts con soporte para contenido guardado sin conexión.
 
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useShortsNavigation } from './hooks/useShortsNavigation'
 import usePlayerShorts from './hooks/usePlayerShorts'
 import ShortPlayer from './components/ShortPlayer'
@@ -12,8 +12,12 @@ import OfflineBanner from '../../shared/components/OfflineBanner'
 import Toast from './components/Toast'
 import './ShortsPage.css'
 
-function ShortsPage({ onBackToProfile }) {
-  const { shorts, status, retry } = usePlayerShorts()
+function ShortsPage({ idUsuario, initialShortId, onBackToProfile }) {
+  const { shorts, status, retry } = usePlayerShorts(idUsuario)
+
+  const initialIndex = shorts.findIndex(
+    (short) => String(short.id) === String(initialShortId)
+  )
 
   const {
     currentIndex,
@@ -22,7 +26,10 @@ function ShortsPage({ onBackToProfile }) {
     isLast,
     nextShort,
     previousShort
-  } = useShortsNavigation(shorts.length)
+  } = useShortsNavigation(
+    shorts.length,
+    initialIndex >= 0 ? initialIndex : 0
+  )
 
   const [toastMessage, setToastMessage] = useState('')
 
@@ -115,10 +122,14 @@ function ShortsPage({ onBackToProfile }) {
             key={currentShort.id}
             className={`shorts-video-column shorts-slide-${direction}`}
           >
-            <ShortPlayer short={currentShort} />
+            <ShortPlayer
+              short={currentShort}
+              idUsuario={idUsuario}
+            />
 
             <ActionButtons
               short={currentShort}
+              idUsuario={idUsuario}
               onToast={showToast}
             />
           </div>
@@ -127,7 +138,10 @@ function ShortsPage({ onBackToProfile }) {
             key={`comments-${currentShort.id}`}
             className="shorts-comments-column"
           >
-            <CommentsPanel shortId={currentShort.id} />
+            <CommentsPanel
+              shortId={currentShort.id}
+              idUsuario={idUsuario}
+            />
           </div>
 
           <ShortNavigator

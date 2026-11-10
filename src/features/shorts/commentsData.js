@@ -2,175 +2,175 @@ export const commentsPool = [
   {
     id: 1,
     usuario: '@luna',
-    texto: 'Este gato es el mejor administrador que he visto.',
+    texto: 'La fuente cambió de color justo cuando pensé en algo triste, no es coincidencia.',
     likes: 12,
     tiempo: '2m'
   },
   {
     id: 2,
     usuario: '@miko',
-    texto: 'La teoría del alquiler es muy sólida.',
+    texto: '¿Y si los temblores de la plaza son porque la fuente está perdiendo el equilibrio?',
     likes: 8,
     tiempo: '14m'
   },
   {
     id: 3,
     usuario: '@nora',
-    texto: 'Me encanta cómo se mueve.',
+    texto: 'Esa paloma lleva demasiado tiempo mirando a la misma persona. Sospechoso.',
     likes: 42,
     tiempo: '1h'
   },
   {
     id: 4,
     usuario: '@tobi',
-    texto: 'La edición es perfecta.',
+    texto: 'Mi ubicación dice que el puente está aquí, pero ayer estaba en otra parte.',
     likes: 18,
     tiempo: '3h'
   },
   {
     id: 5,
     usuario: '@gatuno_teorico',
-    texto: 'Se lo gasta en croquetas premium y por eso no le alcanza.',
+    texto: 'El WIFI se pone más rápido cuando hay mucha gente platicando. PIENSEN.',
     likes: 6,
     tiempo: '5m'
   },
   {
     id: 6,
     usuario: '@pelusa99',
-    texto: 'Yo creo que el gato tiene un segundo trabajo de noche.',
+    texto: 'Los gatos saben perfectamente lo que está haciendo el gobierno.',
     likes: 31,
     tiempo: '22m'
   },
   {
     id: 7,
     usuario: '@dr_miau',
-    texto: 'Si analizas el video, el casero es el perro de al lado. Despierten.',
+    texto: '¿Por qué los tacos siempre cuestan diferente? Claramente hay una secta detrás.',
     likes: 14,
     tiempo: '1h'
   },
   {
     id: 8,
     usuario: '@kira_cat',
-    texto: 'El alquiler se paga en ratones, es la economía felina.',
+    texto: 'Escuchen las coladeras por la noche, parece que la ciudad está respirando.',
     likes: 9,
     tiempo: '2h'
   },
   {
     id: 9,
     usuario: '@bigotes_ia',
-    texto: 'Teoría: el gato es el verdadero dueño y los humanos pagan renta.',
+    texto: 'La fuente no refleja los colores del cielo, refleja nuestros pensamientos.',
     likes: 27,
     tiempo: '3h'
   },
   {
     id: 10,
     usuario: '@croqueta_x',
-    texto: 'Nadie habla de que la sombra del minuto 0:07 es de otro gato.',
+    texto: 'Cada vez que tiembla la fuente vibra antes que los edificios. ¿Casualidad?',
     likes: 19,
     tiempo: '4h'
   },
   {
     id: 11,
     usuario: '@misifus',
-    texto: 'Es una operación encubierta para comprar la casa entera.',
+    texto: 'Esa paloma tiene una cámara donde debería tener los ojos. Ya no confío en nadie.',
     likes: 11,
     tiempo: '6h'
   },
   {
     id: 12,
     usuario: '@teorias_loquito',
-    texto: 'El loquito cobra por maullar, lo vi en un documento filtrado.',
+    texto: 'Los puentes cambian de dimensión mientras todos estamos dormidos.',
     likes: 36,
     tiempo: '7h'
   },
   {
     id: 13,
     usuario: '@panchito',
-    texto: 'Mi gato leyó esto y ahora quiere un contrato.',
+    texto: 'Entonces las conversaciones son el combustible del WIFI... tiene sentido y me preocupa.',
     likes: 22,
     tiempo: '8h'
   },
   {
     id: 14,
     usuario: '@michi_dev',
-    texto: 'El código fuente del gato dice que es un bot.',
+    texto: 'Los gatos llevan años observándonos y todavía creen que no sabemos nada.',
     likes: 5,
     tiempo: '9h'
   },
   {
     id: 15,
     usuario: '@lola_gata',
-    texto: 'Yo creo que paga con cariño y el casero lo acepta.',
+    texto: 'Yo solo quería comprar tacos y terminé descubriendo una organización secreta.',
     likes: 48,
     tiempo: '10h'
   },
   {
     id: 16,
     usuario: '@zorro_urbano',
-    texto: 'Ese cojín del fondo es evidencia de lavado de dinero.',
+    texto: 'Mi abuela dice que las coladeras hacen ruido cuando la ciudad necesita aire.',
     likes: 13,
     tiempo: '12h'
   },
   {
     id: 17,
     usuario: '@felix_x',
-    texto: 'Hace 3 videos dijo que ya no tenía deudas, ¿qué cambió?',
+    texto: 'La fuente estaba verde ayer y hoy está morada. ¿Quién está pensando esas cosas?',
     likes: 7,
     tiempo: '14h'
   },
   {
     id: 18,
     usuario: '@sombra_gris',
-    texto: 'El gato negro del vecino es el contador, lo sé.',
+    texto: 'Si el puente aparece en otro lugar mañana, voy a saber que tenía razón.',
     likes: 17,
     tiempo: '16h'
   },
   {
     id: 19,
     usuario: '@mochi',
-    texto: 'Siento que este canal es una sociedad secreta de gatos.',
+    texto: 'La paloma voltea exactamente cuando alguien saca su celular. Qué conveniente.',
     likes: 25,
     tiempo: '18h'
   },
   {
     id: 20,
     usuario: '@cacahuate',
-    texto: 'Teoría: cada ronroneo es una transferencia bancaria.',
+    texto: 'Dejen de hablar cerca del router, lo están alimentando JAJAJA.',
     likes: 33,
     tiempo: '20h'
   },
   {
     id: 21,
     usuario: '@nube_cat',
-    texto: 'Pausé en el segundo 12 y juro que el gato guiñó.',
+    texto: 'Los puestos de tacos son puntos de reunión de la secta, estoy segura.',
     likes: 10,
     tiempo: '1d'
   },
   {
     id: 22,
     usuario: '@tigre_tech',
-    texto: 'El alquiler es solo la fachada, el gato es agente doble.',
+    texto: 'Los gatos conocen la verdad sobre el gobierno, por eso nunca hablan.',
     likes: 29,
     tiempo: '1d'
   },
   {
     id: 23,
     usuario: '@capitan_garra',
-    texto: 'Exijo temporada 2 con el juicio contra el casero.',
+    texto: '¿Alguien ha grabado una coladera durante toda la noche? Necesitamos pruebas.',
     likes: 15,
     tiempo: '2d'
   },
   {
     id: 24,
     usuario: '@pixel_gato',
-    texto: 'El hashtag #teorias ya se salió de control, me encanta.',
+    texto: 'La ubicación del puente cambia, pero Google Maps insiste en que estoy equivocado.',
     likes: 21,
     tiempo: '2d'
   },
   {
     id: 25,
     usuario: '@bolita',
-    texto: 'Voy a pasar toda la noche viendo teorías de este gato.',
+    texto: 'Después de esta teoría ya no puedo ver una fuente, una paloma ni unos tacos igual.',
     likes: 4,
     tiempo: '3d'
   }

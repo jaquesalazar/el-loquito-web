@@ -1,12 +1,34 @@
-/* Reproductor de videos de CatTube. */
+// Reproductor de videos de CatTube con registro de vistas individuales.
 
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import { registerVideoView } from '../shortsService'
 import './ShortPlayer.css'
 
-function ShortPlayer({ short }) {
+function ShortPlayer({ short, idUsuario }) {
   const videoRef = useRef(null)
+  const viewRegisteredRef = useRef(false)
   const [isPlaying, setIsPlaying] = useState(false)
   const [hasError, setHasError] = useState(false)
+
+  useEffect(() => {
+    viewRegisteredRef.current = false
+    setIsPlaying(false)
+    setHasError(false)
+  }, [short.id])
+
+  async function handlePlay() {
+    setIsPlaying(true)
+
+    if (viewRegisteredRef.current || !idUsuario) return
+
+    viewRegisteredRef.current = true
+
+    try {
+      await registerVideoView(idUsuario, short.id)
+    } catch {
+      viewRegisteredRef.current = false
+    }
+  }
 
   async function togglePlay() {
     const video = videoRef.current
@@ -43,7 +65,7 @@ function ShortPlayer({ short }) {
             src={short.videoUrl}
             playsInline
             preload="metadata"
-            onPlay={() => setIsPlaying(true)}
+            onPlay={handlePlay}
             onPause={() => setIsPlaying(false)}
             onError={() => {
               setHasError(true)
