@@ -1,6 +1,7 @@
-// Reproductor de videos de CatTube con registro de vistas individuales.
 
-import { useEffect, useRef, useState } from 'react'
+// Reproductor de videos de CatTube con barra de progreso y registro de vistas individuales.
+
+import { useRef, useState } from 'react'
 import { registerVideoView } from '../shortsService'
 import './ShortPlayer.css'
 
@@ -9,12 +10,8 @@ function ShortPlayer({ short, idUsuario }) {
   const viewRegisteredRef = useRef(false)
   const [isPlaying, setIsPlaying] = useState(false)
   const [hasError, setHasError] = useState(false)
-
-  useEffect(() => {
-    viewRegisteredRef.current = false
-    setIsPlaying(false)
-    setHasError(false)
-  }, [short.id])
+  const [currentTime, setCurrentTime] = useState(0)
+  const [duration, setDuration] = useState(0)
 
   async function handlePlay() {
     setIsPlaying(true)
@@ -46,9 +43,21 @@ function ShortPlayer({ short, idUsuario }) {
     }
   }
 
+  function handleSeek(event) {
+    const video = videoRef.current
+
+    if (!video) return
+
+    const newTime = Number(event.target.value)
+    video.currentTime = newTime
+    setCurrentTime(newTime)
+  }
+
   function handleVideoChange() {
     setIsPlaying(false)
     setHasError(false)
+    setCurrentTime(0)
+    setDuration(0)
   }
 
   return (
@@ -67,6 +76,9 @@ function ShortPlayer({ short, idUsuario }) {
             preload="metadata"
             onPlay={handlePlay}
             onPause={() => setIsPlaying(false)}
+            onTimeUpdate={() => setCurrentTime(videoRef.current?.currentTime || 0)}
+            onLoadedMetadata={() => setDuration(videoRef.current?.duration || 0)}
+            onEnded={() => setIsPlaying(false)}
             onError={() => {
               setHasError(true)
               setIsPlaying(false)
@@ -88,33 +100,40 @@ function ShortPlayer({ short, idUsuario }) {
         )}
 
         {short.videoUrl && !hasError && (
+          <input
+            type="range"
+            className="short-player-progress"
+            min="0"
+            max={duration || 0}
+            step="0.1"
+            value={Math.min(currentTime, duration || 0)}
+            onChange={handleSeek}
+            disabled={!duration}
+            aria-label="Progreso del video"
+            style={{
+              '--progress': `${duration ? (currentTime / duration) * 100 : 0}%`
+            }}
+          />
+        )}
+
+        {short.videoUrl && !hasError && !isPlaying && (
           <button
             type="button"
             className="short-player-play"
             onClick={togglePlay}
-            aria-label={isPlaying ? 'Pausar video' : 'Reproducir video'}
-            aria-pressed={isPlaying}
+            aria-label="Reproducir video"
+            aria-pressed={false}
           >
-            {isPlaying ? (
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                <rect x="5" y="3" width="5" height="18" rx="1" />
-                <rect x="14" y="3" width="5" height="18" rx="1" />
-              </svg>
-            ) : (
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                <path d="M7 4.5C7 3.7 7.9 3.2 8.6 3.6L20 10.8C20.8 11.3 20.8 12.7 20 13.2L8.6 20.4C7.9 20.8 7 20.3 7 19.5V4.5Z" />
-              </svg>
-            )}
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M7 4.5C7 3.7 7.9 3.2 8.6 3.6L20 10.8C20.8 11.3 20.8 12.7 20 13.2L8.6 20.4C7.9 20.8 7 20.3 7 19.5V4.5Z" />
+            </svg>
           </button>
         )}
 
         <div className="short-player-info">
           <p className="short-player-user">{short.usuario}</p>
-
           <h2 className="short-player-title">{short.titulo}</h2>
-
           <p className="short-player-description">{short.descripcion}</p>
-
           <div className="short-player-hashtags">
             {short.hashtags.map((hashtag) => (
               <span key={hashtag}>{hashtag}</span>

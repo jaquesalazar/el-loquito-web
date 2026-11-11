@@ -1,6 +1,7 @@
+
 // Pantalla de reproducción de Shorts con soporte para contenido guardado sin conexión.
 
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useState } from 'react'
 import { useShortsNavigation } from './hooks/useShortsNavigation'
 import usePlayerShorts from './hooks/usePlayerShorts'
 import ShortPlayer from './components/ShortPlayer'

@@ -1,13 +1,12 @@
+
 /* Reproductor de Shorts */
- 
-/* Contenedor principal del reproductor */
+
 .short-player {
   width: 100%;
   height: 100%;
   min-width: 0;
 }
 
-/* Área vertical del video */
 .short-player-video {
   position: relative;
   width: 100%;
@@ -82,7 +81,6 @@
     rgba(0, 0, 0, 0.8),
     rgba(0, 0, 0, 0)
   );
-
   z-index: 1;
 }
 
@@ -122,8 +120,52 @@
   font-family: 'Nunito', sans-serif;
   font-size: 14px;
   font-weight: 800;
-
   color: #a8c76b;
+}
+
+.short-player-progress {
+  position: absolute;
+  top: 10px;
+  left: 12px;
+  width: calc(100% - 24px);
+  height: 3px;
+  padding: 0;
+  appearance: none;
+  -webkit-appearance: none;
+  border: none;
+  border-radius: 10px;
+  background: linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0.95) var(--progress),
+    rgba(255, 255, 255, 0.25) var(--progress)
+  );
+  cursor: pointer;
+  z-index: 4;
+  opacity: 0.65;
+  transition: opacity 0.2s ease;
+}
+
+.short-player-progress:hover,
+.short-player-progress:focus-visible {
+  opacity: 1;
+}
+
+.short-player-progress::-webkit-slider-thumb {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 7px;
+  height: 7px;
+  border: none;
+  border-radius: 50%;
+  background: #ffffff;
+}
+
+.short-player-progress::-moz-range-thumb {
+  width: 7px;
+  height: 7px;
+  border: none;
+  border-radius: 50%;
+  background: #ffffff;
 }
 
 @media (max-width: 700px) {
