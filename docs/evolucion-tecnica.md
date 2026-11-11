@@ -23,7 +23,7 @@ Se realizaron las siguientes actividades:
 - Preparación inicial de archivos para el manifest, Service Worker y registro de la PWA.
 - Creación de archivos base para servicios y datos simulados.
 
-**Motivo:** establecer una organización clara antes de comenzar la implementación de la interfaz y las funcionalidades.
+**Motivo:** mejorar la experiencia de navegación, contemplar diferentes estados de la aplicación y ampliar las pantallas disponibles.
 
 ### 16 de octubre de 2026: inicialización de React
 
@@ -33,7 +33,7 @@ Se inicializó el proyecto React utilizando Vite.
 
 Se incorporaron los archivos de configuración, dependencias, estilos iniciales y punto de entrada de la aplicación.
 
-**Motivo:** contar con una base funcional para desarrollar las pantallas de CatTube.
+**Motivo:** mejorar la experiencia de navegación, contemplar diferentes estados de la aplicación y ampliar las pantallas disponibles.
 
 ### 20 de octubre de 2026: implementación de Perfil y Shorts
 
@@ -53,7 +53,7 @@ Se agregaron componentes para:
 
 En esta etapa se utilizaron datos locales y simulados para representar el funcionamiento de la plataforma.
 
-**Motivo:** construir la experiencia visual y las interacciones principales antes de conectar los servicios reales.
+**Motivo:** mejorar la experiencia de navegación, contemplar diferentes estados de la aplicación y ampliar las pantallas disponibles.
 
 ### 22 de octubre de 2026: estados de interfaz y funcionamiento PWA
 
@@ -71,7 +71,7 @@ Entre los cambios se encuentran:
 - Registro del Service Worker.
 - Preparación de recursos y caché.
 
-También se agregó la pantalla de Estadísticas, con tarjetas y gráficas para representar cohesión, seguidores, dinero e influencia.
+También se agregó la pantalla de Estadísticas, con tarjetas y gráficas para representar cohesión, seguidores y dinero.
 
 **Motivo:** mejorar la experiencia de navegación, contemplar diferentes estados de la aplicación y ampliar las pantallas disponibles.
 
@@ -87,7 +87,7 @@ Se agregaron archivos de configuración para preparar un contenedor de CatTube:
 
 Este cambio aparece registrado en la rama `practica/git-docker`.
 
-**Motivo:** realizar la práctica de contenerización y preparar la aplicación para su ejecución mediante Docker.
+**Motivo:** mejorar la experiencia de navegación, contemplar diferentes estados de la aplicación y ampliar las pantallas disponibles.
 
 ### 27 de octubre de 2026: ajustes en Perfil
 
@@ -99,7 +99,7 @@ Se incorporaron imágenes para el avatar y la portada, además de ajustes en los
 
 También se modificaron elementos de la pantalla de Estadísticas y del estado de error.
 
-**Motivo:** mejorar la presentación visual y ajustar los componentes de la aplicación.
+**Motivo:** mejorar la experiencia de navegación, contemplar diferentes estados de la aplicación y ampliar las pantallas disponibles.
 
 ### 31 de octubre de 2026: mejoras offline y descarga de Android
 
@@ -117,7 +117,7 @@ Se modificaron elementos como:
 
 También se agregó un modal para descargar la aplicación Android y se incorporó el archivo APK en `public/downloads/app-release.apk`.
 
-**Motivo:** mejorar la experiencia cuando se pierde la conexión y facilitar el acceso a la versión Android.
+**Motivo:** mejorar la experiencia de navegación, contemplar diferentes estados de la aplicación y ampliar las pantallas disponibles.
 
 ### 8 de noviembre de 2026: integración de videos y comentarios con el backend
 
@@ -148,7 +148,7 @@ Los endpoints utilizados para los comentarios son:
 | POST | `/api/videos/{idVideo}/comentarios` | Publicar un comentario. |
 | DELETE | `/api/videos/{idVideo}/comentarios/{idComentario}?idUsuario={idUsuario}` | Eliminar un comentario. |
 
-**Motivo:** sustituir la dependencia de datos simulados por información consultada y almacenada mediante los servicios reales del proyecto.
+**Motivo:** mejorar la experiencia de navegación, contemplar diferentes estados de la aplicación y ampliar las pantallas disponibles.
 
 ## 3. Pruebas realizadas
 

@@ -90,8 +90,13 @@ function App() {
     }
 
     if (currentPage === 'statistics') {
-      return <StatsPage onBackToProfile={goToProfile} />
-    }
+    return (
+      <StatsPage
+        idUsuario={player.idUsuario}
+        onBackToProfile={goToProfile}
+      />
+    )
+  }
 
     return (
       <ProfilePage

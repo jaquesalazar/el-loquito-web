@@ -1,6 +1,8 @@
+
+// Pantalla de estadísticas del jugador en CatTube.
+
 import StatCard from './StatCard'
 import FollowersChart from './FollowersChart'
-import InfluenceChart from './InfluenceChart'
 import MoneyChart from './MoneyChart'
 import CohesionChart from './CohesionChart'
 import useStats from './useStats'
@@ -12,8 +14,8 @@ import './StatsPage.css'
 const formatNumber = (value) =>
   new Intl.NumberFormat('es-MX').format(value).replace(/,/g, '.')
 
-function StatsPage({ onBackToProfile }) {
-  const { stats, state, retry } = useStats()
+function StatsPage({ idUsuario, onBackToProfile }) {
+  const { stats, state, retry } = useStats(idUsuario)
 
   const isLoading = state === 'loading'
   const isOffline = state === 'offline'
@@ -23,7 +25,7 @@ function StatsPage({ onBackToProfile }) {
     if (isLoading) {
       return (
         <div className="stats-grid" aria-label="Cargando estadísticas">
-          {Array.from({ length: 4 }, (_, index) => (
+          {Array.from({ length: 3 }, (_, index) => (
             <div className="stat-card stat-card-skeleton" key={index}>
               <div className="stats-skeleton stats-skeleton-title"></div>
               <div className="stats-skeleton stats-skeleton-value"></div>
@@ -35,57 +37,55 @@ function StatsPage({ onBackToProfile }) {
       )
     }
 
-    
-  if (state === 'error') {
-    return (
-      <ErrorState
-        title="No pudimos cargar las estadísticas"
-        description="Ocurrió un problema al consultar los datos del juego. Inténtalo nuevamente."
-        onRetry={retry}
-      />
-    )
-  }
-
+    if (state === 'error') {
+      return (
+        <ErrorState
+          title="No pudimos cargar las estadísticas"
+          description="Ocurrió un problema al consultar los datos del juego. Inténtalo nuevamente."
+          onRetry={retry}
+        />
+      )
+    }
 
     if (state === 'empty' || !hasData) {
-  return (
-    <div className="stats-feedback">
-      <svg
-        width="52"
-        height="52"
-        viewBox="0 0 64 64"
-        fill="none"
-        aria-hidden="true"
-      >
-        <path
-          d="M12 27 15 8l13 11h8L49 8l3 19v12c0 12-9 19-20 19S12 51 12 39V27Z"
-          fill="#6E8B3E"
-        />
-        <path
-          d="m22 33 5 3m15-3-5 3M29 43l3 3 3-3"
-          stroke="#ECE5D3"
-          strokeWidth="3"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-      </svg>
+      return (
+        <div className="stats-feedback">
+          <svg
+            width="52"
+            height="52"
+            viewBox="0 0 64 64"
+            fill="none"
+            aria-hidden="true"
+          >
+            <path
+              d="M12 27 15 8l13 11h8L49 8l3 19v12c0 12-9 19-20 19S12 51 12 39V27Z"
+              fill="#6E8B3E"
+            />
+            <path
+              d="m22 33 5 3m15-3-5 3M29 43l3 3 3-3"
+              stroke="#ECE5D3"
+              strokeWidth="3"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
 
-      <h2>
-        {isOffline
-          ? 'No hay estadísticas guardadas'
-          : 'Aún no hay estadísticas'}
-      </h2>
+          <h2>
+            {isOffline
+              ? 'No hay estadísticas guardadas'
+              : 'Aún no hay estadísticas'}
+          </h2>
 
-      <p>
-        {isOffline
-          ? 'Conéctate a internet para consultar las estadísticas por primera vez.'
-          : 'Los datos aparecerán cuando haya actividad dentro del juego.'}
-      </p>
-    </div>
-  )
-}
+          <p>
+            {isOffline
+              ? 'Conéctate a internet para consultar las estadísticas por primera vez.'
+              : 'Los datos aparecerán cuando haya actividad dentro del juego.'}
+          </p>
+        </div>
+      )
+    }
+
     const followers = stats.followers
-    const influence = stats.influence
     const money = stats.money
     const cohesion = stats.cohesion
 
@@ -97,7 +97,7 @@ function StatsPage({ onBackToProfile }) {
     const percentageChange = favorPercentage - cohesion.previousPercentage
     const changeIsPositive = percentageChange >= 0
 
-    const changeBadge = (
+    const changeBadge = cohesion.history?.length > 1 ? (
       <span
         className={
           changeIsPositive
@@ -111,7 +111,7 @@ function StatsPage({ onBackToProfile }) {
         })}{' '}
         p. p.
       </span>
-    )
+    ) : null
 
     return (
       <div className="stats-grid">
@@ -121,19 +121,6 @@ function StatsPage({ onBackToProfile }) {
           legend="Seguidores totales"
         >
           <FollowersChart data={followers.history} />
-        </StatCard>
-
-        <StatCard
-          title="Influencia"
-         
-            value={`${(influence.total / 1000).toLocaleString('es-ES', {
-            minimumFractionDigits: 1,
-            maximumFractionDigits: 1,
-            })} mil`}
-
-          legend="Influencia acumulada"
-        >
-          <InfluenceChart data={influence.history} />
         </StatCard>
 
         <StatCard

@@ -1,4 +1,4 @@
-/* Gráfica SVG de seguidores del personaje con información accesible por día */
+// Gráfica SVG de la evolución diaria de seguidores.
 
 import { useState } from 'react'
 
@@ -8,8 +8,6 @@ const LEFT = 58
 const RIGHT = 18
 const TOP = 22
 const BOTTOM = 42
-const MIN_Y = 10800
-const MAX_Y = 12600
 
 const formatNumber = (value) =>
   new Intl.NumberFormat('es-MX').format(value).replace(/,/g, '.')
@@ -28,9 +26,21 @@ function FollowersChart({ data = [] }) {
   const plotWidth = WIDTH - LEFT - RIGHT
   const plotHeight = HEIGHT - TOP - BOTTOM
 
+  const values = data.map((item) => item.value)
+  const minValue = Math.min(...values)
+  const maxValue = Math.max(...values)
+  const range = maxValue - minValue
+  const padding = range === 0
+    ? Math.max(maxValue * 0.1, 10)
+    : range * 0.15
+
+  const axisMin = Math.max(0, minValue - padding)
+  const axisMax = maxValue + padding
+  const axisRange = axisMax - axisMin
+
   const points = data.map((item, index) => {
     const x = LEFT + (index / Math.max(data.length - 1, 1)) * plotWidth
-    const y = TOP + ((MAX_Y - item.value) / (MAX_Y - MIN_Y)) * plotHeight
+    const y = TOP + plotHeight - ((item.value - axisMin) / axisRange) * plotHeight
 
     return { ...item, x, y }
   })
@@ -44,7 +54,11 @@ function FollowersChart({ data = [] }) {
     return `${path} C ${middleX} ${previous.y}, ${middleX} ${point.y}, ${point.x} ${point.y}`
   }, '')
 
-  const ticks = [10800, 11400, 12000, 12600]
+  const ticks = Array.from(
+    { length: 4 },
+    (_, index) => axisMin + (axisRange / 3) * index
+  )
+
   const activePoint = activeIndex === null ? null : points[activeIndex]
 
   const variation = activeIndex > 0
@@ -56,14 +70,14 @@ function FollowersChart({ data = [] }) {
       <svg
         viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
         role="img"
-        aria-label={`Evolución de seguidores de El loquito. Total actual: ${formatNumber(data[data.length - 1].value)} seguidores.`}
+        aria-label={`Evolución de seguidores. Total actual: ${formatNumber(data[data.length - 1].value)} seguidores.`}
         className="stats-svg"
       >
-        {ticks.map((tick) => {
-          const y = TOP + ((MAX_Y - tick) / (MAX_Y - MIN_Y)) * plotHeight
+        {ticks.map((tick, index) => {
+          const y = TOP + plotHeight - ((tick - axisMin) / axisRange) * plotHeight
 
           return (
-            <g key={tick}>
+            <g key={index}>
               <line
                 x1={LEFT}
                 y1={y}
@@ -79,7 +93,7 @@ function FollowersChart({ data = [] }) {
                 fill="#777"
                 fontSize="12"
               >
-                {(tick / 1000).toFixed(1).replace('.', ',')} mil
+                {formatNumber(Math.round(tick))}
               </text>
             </g>
           )

@@ -1,4 +1,4 @@
-/* Gráfica SVG de ingresos diarios del personaje con moneda configurable */
+// Gráfica SVG de la evolución diaria del dinero del jugador.
 
 import { useState } from 'react'
 import { formatGameMoney } from './config'
@@ -9,14 +9,13 @@ const LEFT = 58
 const RIGHT = 18
 const TOP = 22
 const BOTTOM = 42
-const MAX_Y = 60
 
 function MoneyChart({ data = [] }) {
   const [activeIndex, setActiveIndex] = useState(null)
 
   if (!data.length) {
     return (
-      <div role="img" aria-label="No hay datos de ingresos disponibles">
+      <div role="img" aria-label="No hay datos de dinero disponibles">
         Sin datos disponibles
       </div>
     )
@@ -24,8 +23,8 @@ function MoneyChart({ data = [] }) {
 
   const plotWidth = WIDTH - LEFT - RIGHT
   const plotHeight = HEIGHT - TOP - BOTTOM
-  const maxValue = Math.max(MAX_Y, ...data.map((item) => item.value))
-  const axisMax = Math.ceil(maxValue / 20) * 20
+  const maxValue = Math.max(...data.map((item) => item.value))
+  const axisMax = Math.max(20, Math.ceil(maxValue / 20) * 20)
 
   const points = data.map((item, index) => {
     const x = LEFT + (index / Math.max(data.length - 1, 1)) * plotWidth
@@ -54,7 +53,7 @@ function MoneyChart({ data = [] }) {
       <svg
         viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
         role="img"
-        aria-label={`Ingresos diarios de El loquito. Total acumulado: ${formatGameMoney(data.reduce((sum, item) => sum + item.value, 0))}.`}
+        aria-label={`Evolución diaria del dinero. Último valor registrado: ${formatGameMoney(data[data.length - 1].value)}.`}
         className="stats-svg"
       >
         <defs>
@@ -64,11 +63,11 @@ function MoneyChart({ data = [] }) {
           </linearGradient>
         </defs>
 
-        {ticks.map((tick) => {
+        {ticks.map((tick, index) => {
           const y = baseline - (tick / axisMax) * plotHeight
 
           return (
-            <g key={tick}>
+            <g key={index}>
               <line
                 x1={LEFT}
                 y1={y}
@@ -114,7 +113,7 @@ function MoneyChart({ data = [] }) {
               strokeWidth="2"
               tabIndex="0"
               role="button"
-              aria-label={`${point.date}: ${formatGameMoney(point.value)} de ingresos`}
+              aria-label={`${point.date}: ${formatGameMoney(point.value)} de dinero`}
               onMouseEnter={() => setActiveIndex(index)}
               onMouseLeave={() => setActiveIndex(null)}
               onFocus={() => setActiveIndex(index)}
@@ -136,7 +135,7 @@ function MoneyChart({ data = [] }) {
       {activePoint && (
         <div className="stats-tooltip" role="status" aria-live="polite">
           <strong>{activePoint.date}</strong>
-          <span>{formatGameMoney(activePoint.value)} de ingresos</span>
+          <span>{formatGameMoney(activePoint.value)} de dinero</span>
         </div>
       )}
     </div>

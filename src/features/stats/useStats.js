@@ -1,32 +1,35 @@
-/* Hook para cargar, almacenar y gestionar los estados de las estadísticas de CatTube */
+// Hook para cargar y conservar las estadísticas de cada jugador.
 
 import { useCallback, useEffect, useState } from 'react'
-import { getStats } from './data'
+import { getStats } from './statsService'
 import useOnlineStatus from '../../shared/hooks/useOnlineStatus'
 
-const CACHE_KEY = 'cattube-stats-cache'
 const validStates = ['loading', 'ready', 'error', 'empty', 'offline']
 
-function readCache() {
+function getCacheKey(idUsuario) {
+  return `cattube-stats-cache-${idUsuario}`
+}
+
+function readCache(idUsuario) {
   try {
-    const saved = localStorage.getItem(CACHE_KEY)
+    const saved = localStorage.getItem(getCacheKey(idUsuario))
     return saved ? JSON.parse(saved) : null
   } catch {
     return null
   }
 }
 
-function saveCache(data) {
+function saveCache(idUsuario, data) {
   try {
-    localStorage.setItem(CACHE_KEY, JSON.stringify(data))
+    localStorage.setItem(getCacheKey(idUsuario), JSON.stringify(data))
   } catch {
     return
   }
 }
 
-function useStats() {
+function useStats(idUsuario) {
   const isOnline = useOnlineStatus()
-  const [stats, setStats] = useState(readCache)
+  const [stats, setStats] = useState(() => readCache(idUsuario))
   const [state, setState] = useState('loading')
   const [retryCount, setRetryCount] = useState(0)
 
@@ -47,6 +50,12 @@ function useStats() {
     let cancelled = false
 
     async function loadStats() {
+      if (!idUsuario) {
+        setStats(null)
+        setState('empty')
+        return
+      }
+
       if (forcedState === 'loading') {
         setState('loading')
         return
@@ -64,15 +73,16 @@ function useStats() {
       }
 
       if (forcedState === 'offline' || !isOnline) {
-        setStats(readCache())
+        setStats(readCache(idUsuario))
         setState('offline')
         return
       }
 
+      setStats(readCache(idUsuario))
       setState('loading')
 
       try {
-        const data = await getStats()
+        const data = await getStats(idUsuario)
 
         if (cancelled) return
 
@@ -83,12 +93,12 @@ function useStats() {
         }
 
         setStats(data)
-        saveCache(data)
+        saveCache(idUsuario, data)
         setState('ready')
       } catch {
         if (cancelled) return
 
-        setStats(readCache())
+        setStats(readCache(idUsuario))
         setState(isOnline ? 'error' : 'offline')
       }
     }
@@ -98,7 +108,7 @@ function useStats() {
     return () => {
       cancelled = true
     }
-  }, [isOnline, forcedState, retryCount])
+  }, [idUsuario, isOnline, forcedState, retryCount])
 
   return {
     stats,
