@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { loginPlayer } from './usernameService'
 import './UsernamePage.css'
+import LegalDocuments from '../../shared/components/LegalDocuments'
 
 function UsernamePage({ onLogin }) {
   const [username, setUsername] = useState('')
@@ -71,6 +72,8 @@ function UsernamePage({ onLogin }) {
             {isLoading ? 'Ingresando...' : 'Iniciar sesión'}
           </button>
         </form>
+
+        <LegalDocuments />
 
         <span className="username-footer">
           EL LOQUITO · CAT TUBE
