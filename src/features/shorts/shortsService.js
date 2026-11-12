@@ -1,6 +1,11 @@
 // Servicios para consultar los videos asignados y su progreso en CatTube.
 
 import { apiRequest } from '../../shared/services/apiClient'
+import {
+  addPendingView,
+  getPendingViews,
+  removePendingView
+} from './viewsStorage'
 
 function mapVideo(video, progress) {
   return {
@@ -58,11 +63,40 @@ export async function updateVideoLike(idUsuario, idVideo, liked) {
 }
 
 export async function registerVideoView(idUsuario, idVideo) {
-  return apiRequest(
-    `/usuarios/${idUsuario}/videos/${idVideo}/progreso/vistas`,
-    {
-      method: 'POST',
-      body: JSON.stringify({ cantidad: 1 })
+  try {
+    return await apiRequest(
+      `/usuarios/${idUsuario}/videos/${idVideo}/progreso/vistas`,
+      {
+        method: 'POST',
+        body: JSON.stringify({ cantidad: 1 })
+      }
+    )
+  } catch (error) {
+    if (!navigator.onLine || error instanceof TypeError) {
+      await addPendingView(idUsuario, idVideo)
+      return null
     }
-  )
+
+    throw error
+  }
+}
+
+export async function syncPendingViews(idUsuario) {
+  if (!idUsuario || !navigator.onLine) return
+
+  const pendingViews = await getPendingViews(idUsuario)
+
+  for (const view of pendingViews) {
+    if (!navigator.onLine) return
+
+    await apiRequest(
+      `/usuarios/${view.userId}/videos/${view.videoId}/progreso/vistas`,
+      {
+        method: 'POST',
+        body: JSON.stringify({ cantidad: 1 })
+      }
+    )
+
+    await removePendingView(view.id)
+  }
 }

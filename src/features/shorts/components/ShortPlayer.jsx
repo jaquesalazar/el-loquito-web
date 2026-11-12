@@ -1,17 +1,24 @@
-
 // Reproductor de videos de CatTube con barra de progreso y registro de vistas individuales.
 
-import { useRef, useState } from 'react'
-import { registerVideoView } from '../shortsService'
+import { useEffect, useRef, useState } from 'react'
+import { registerVideoView, syncPendingViews } from '../shortsService'
+import useOnlineStatus from '../../../shared/hooks/useOnlineStatus'
 import './ShortPlayer.css'
 
 function ShortPlayer({ short, idUsuario }) {
   const videoRef = useRef(null)
   const viewRegisteredRef = useRef(false)
+  const isOnline = useOnlineStatus()
   const [isPlaying, setIsPlaying] = useState(false)
   const [hasError, setHasError] = useState(false)
   const [currentTime, setCurrentTime] = useState(0)
   const [duration, setDuration] = useState(0)
+
+  useEffect(() => {
+    if (!isOnline || !idUsuario) return
+
+    syncPendingViews(idUsuario).catch(() => {})
+  }, [isOnline, idUsuario])
 
   async function handlePlay() {
     setIsPlaying(true)
@@ -54,6 +61,7 @@ function ShortPlayer({ short, idUsuario }) {
   }
 
   function handleVideoChange() {
+    viewRegisteredRef.current = false
     setIsPlaying(false)
     setHasError(false)
     setCurrentTime(0)

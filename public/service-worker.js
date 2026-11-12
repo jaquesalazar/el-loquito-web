@@ -1,5 +1,4 @@
-
-/* Service Worker de CatTube para almacenar recursos y comprobar la conexión. */
+// Service Worker de CatTube para almacenar recursos, videos y comprobar la conexión.
 
 const CACHE_NAME = 'cattube-static-v1'
 const VIDEO_CACHE_NAME = 'cattube-videos-v1'
@@ -34,55 +33,163 @@ self.addEventListener('activate', (event) => {
   )
 })
 
-async function cacheVideo(request, response) {
-  const contentLength = Number(response.headers.get('content-length') || 0)
+function createVideoResponse(response, range) {
+  return response.arrayBuffer().then((buffer) => {
+    const size = buffer.byteLength
+    const headers = new Headers(response.headers)
 
-  if (
-    !response.ok ||
-    response.status === 206 ||
-    response.type === 'opaque' ||
-    (contentLength && contentLength > MAX_VIDEO_SIZE)
-  ) {
-    return response
+    headers.delete('content-encoding')
+    headers.delete('content-range')
+    headers.set('accept-ranges', 'bytes')
+    headers.set('content-length', String(size))
+
+    if (!range) {
+      return new Response(buffer, {
+        status: 200,
+        headers
+      })
+    }
+
+    const match = range.match(/^bytes=(\d*)-(\d*)$/)
+
+    if (!match) {
+      return new Response(null, {
+        status: 416,
+        headers: { 'Content-Range': `bytes */${size}` }
+      })
+    }
+
+    let start
+    let end
+
+    if (!match[1]) {
+      const suffixLength = Number(match[2])
+      start = Math.max(size - suffixLength, 0)
+      end = size - 1
+    } else {
+      start = Number(match[1])
+      end = match[2] ? Math.min(Number(match[2]), size - 1) : size - 1
+    }
+
+    if (start >= size || start > end) {
+      return new Response(null, {
+        status: 416,
+        headers: { 'Content-Range': `bytes */${size}` }
+      })
+    }
+
+    const chunk = buffer.slice(start, end + 1)
+
+    headers.set('content-range', `bytes ${start}-${end}/${size}`)
+    headers.set('content-length', String(chunk.byteLength))
+
+    return new Response(chunk, {
+      status: 206,
+      headers
+    })
+  })
+}
+
+async function handleVideoRequest(request) {
+  const cache = await caches.open(VIDEO_CACHE_NAME)
+  const cachedResponse = await cache.match(request.url)
+
+  if (cachedResponse) {
+    return createVideoResponse(
+      cachedResponse,
+      request.headers.get('range')
+    )
   }
 
-  const cache = await caches.open(VIDEO_CACHE_NAME)
-  await cache.put(request, response.clone())
+  try {
+    const headers = new Headers(request.headers)
+    headers.delete('range')
 
-  return response
+    const networkRequest = new Request(request.url, {
+      method: 'GET',
+      headers,
+      mode: request.mode,
+      credentials: request.credentials,
+      redirect: request.redirect
+    })
+
+    const response = await fetch(networkRequest)
+
+    if (!response.ok || response.status !== 200 || response.type === 'opaque') {
+      return response
+    }
+
+    const buffer = await response.arrayBuffer()
+
+    if (buffer.byteLength > MAX_VIDEO_SIZE) {
+      return new Response(buffer, {
+        status: 200,
+        headers: response.headers
+      })
+    }
+
+    const fullHeaders = new Headers(response.headers)
+    fullHeaders.delete('content-encoding')
+    fullHeaders.delete('content-range')
+    fullHeaders.set('content-length', String(buffer.byteLength))
+    fullHeaders.set('accept-ranges', 'bytes')
+
+    const fullResponse = new Response(buffer, {
+      status: 200,
+      headers: fullHeaders
+    })
+
+    await cache.put(request.url, fullResponse.clone())
+
+    return createVideoResponse(
+      fullResponse,
+      request.headers.get('range')
+    )
+  } catch {
+    return Response.error()
+  }
 }
 
 self.addEventListener('fetch', (event) => {
   const request = event.request
   const url = new URL(request.url)
 
+  if (request.method !== 'GET') return
+
+  const isVideo =
+    request.destination === 'video' ||
+    /\.(mp4|webm|ogg)$/i.test(url.pathname)
+
+  if (isVideo) {
+    event.respondWith(handleVideoRequest(request))
+    return
+  }
+
   if (url.origin !== self.location.origin) return
 
   if (url.pathname === '/connection-check.txt') {
-  event.respondWith(
-    (async () => {
-      const controller = new AbortController()
-      const timeout = setTimeout(() => controller.abort(), 1500)
+    event.respondWith(
+      (async () => {
+        const controller = new AbortController()
+        const timeout = setTimeout(() => controller.abort(), 4000)
 
-      try {
-        await fetch('https://connectivitycheck.gstatic.com/generate_204', {
-          mode: 'no-cors',
-          cache: 'no-store',
-          signal: controller.signal
-        })
+        try {
+          await fetch('https://connectivitycheck.gstatic.com/generate_204', {
+            mode: 'no-cors',
+            cache: 'no-store',
+            signal: controller.signal
+          })
 
-        return new Response(null, { status: 204 })
-      } catch {
-        return new Response(null, { status: 503 })
-      } finally {
-        clearTimeout(timeout)
-      }
-    })()
-  )
-  return
-}
-
-  if (request.method !== 'GET') return
+          return new Response(null, { status: 204 })
+        } catch {
+          return new Response(null, { status: 503 })
+        } finally {
+          clearTimeout(timeout)
+        }
+      })()
+    )
+    return
+  }
 
   if (request.mode === 'navigate') {
     event.respondWith(
@@ -104,25 +211,6 @@ self.addEventListener('fetch', (event) => {
             await cache.match('/offline.html') ||
             Response.error()
           )
-        }
-      })()
-    )
-    return
-  }
-
-  if (request.destination === 'video') {
-    event.respondWith(
-      (async () => {
-        const cache = await caches.open(VIDEO_CACHE_NAME)
-        const cachedResponse = await cache.match(request)
-
-        if (cachedResponse) return cachedResponse
-
-        try {
-          const response = await fetch(request)
-          return await cacheVideo(request, response)
-        } catch {
-          return Response.error()
         }
       })()
     )

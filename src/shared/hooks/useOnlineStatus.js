@@ -17,7 +17,7 @@ function useOnlineStatus() {
 
     try {
       const response = await fetch('/connection-check.txt', {
-        method: 'HEAD',
+        method: 'GET',
         cache: 'no-store',
         signal: controller.signal
       })

@@ -1,8 +1,19 @@
+
 // Panel de comentarios reales y aleatorios de CatTube.
 
 import { useEffect, useState } from 'react'
 import { useRandomComments } from '../hooks/useRandomComments'
 import { getComments, createComment, deleteComment } from '../commentsService'
+import {
+  getStoredComments,
+  getPendingComments,
+  saveStoredComments,
+  addPendingComment,
+  markCommentForDeletion,
+  removeStoredComment,
+  removePendingComment
+} from '../commentsStorage'
+import useOnlineStatus from '../../../shared/hooks/useOnlineStatus'
 import CommentItem from './CommentItem'
 import CommentInput from './CommentInput'
 import './CommentsPanel.css'
@@ -29,24 +40,25 @@ function formatCommentTime(createdAt, currentTime) {
 }
 
 function mapComment(comment, idUsuario) {
-  const isCreator = comment.idUsuario === idUsuario
-
   return {
-    id: `db-${comment.idComentario}`,
+    ...comment,
+    id: comment.id || `db-${comment.idComentario}`,
     idComentario: comment.idComentario,
     idUsuario: comment.idUsuario,
-    usuario: `@${comment.username.replace(/^@/, '')}`,
-    esCreador: isCreator,
-    avatar: isCreator ? '/images/Avatar.png' : null,
+    usuario: `@${(comment.username || 'jugador').replace(/^@/, '')}`,
+    esCreador: comment.idUsuario === idUsuario,
+    avatar: comment.idUsuario === idUsuario ? '/images/Avatar.png' : null,
     createdAt: comment.createdAt,
     tiempo: '',
     texto: comment.texto,
-    likes: 0
+    likes: 0,
+    pendiente: Boolean(comment.pendingCreate)
   }
 }
 
 function CommentsPanel({ shortId, idUsuario }) {
   const randomComments = useRandomComments(shortId)
+  const isOnline = useOnlineStatus()
 
   const [savedComments, setSavedComments] = useState([])
   const [replyTo, setReplyTo] = useState('')
@@ -57,13 +69,8 @@ function CommentsPanel({ shortId, idUsuario }) {
   const [isDeleting, setIsDeleting] = useState(false)
 
   useEffect(() => {
-    const timeout = setTimeout(() => {
-      setCurrentTime(Date.now())
-    }, 0)
-
-    const interval = setInterval(() => {
-      setCurrentTime(Date.now())
-    }, 60000)
+    const timeout = setTimeout(() => setCurrentTime(Date.now()), 0)
+    const interval = setInterval(() => setCurrentTime(Date.now()), 60000)
 
     return () => {
       clearTimeout(timeout)
@@ -79,30 +86,87 @@ function CommentsPanel({ shortId, idUsuario }) {
       setError('')
 
       try {
-        const response = await getComments(shortId, idUsuario)
+        const localComments = await getStoredComments(shortId, idUsuario)
 
         if (active) {
-          setSavedComments(response.map((comment) => mapComment(comment, idUsuario)))
+          setSavedComments(localComments.map((comment) => mapComment(comment, idUsuario)))
+        }
+
+        if (isOnline) {
+          try {
+            const response = await getComments(shortId, idUsuario)
+            await saveStoredComments(shortId, idUsuario, response)
+
+            const updatedLocalComments = await getStoredComments(shortId, idUsuario)
+
+            if (active) {
+              setSavedComments(updatedLocalComments.map((comment) => mapComment(comment, idUsuario)))
+            }
+          } catch {
+            if (active && localComments.length === 0) {
+              setError('No se pudieron cargar los comentarios.')
+            }
+          }
+        } else if (localComments.length === 0 && active) {
+          setError('No hay comentarios guardados para este video.')
         }
       } catch {
         if (active) {
-          setError('No se pudieron cargar los comentarios guardados.')
+          setError('No se pudo acceder al almacenamiento local.')
         }
       } finally {
-        if (active) {
-          setIsLoading(false)
-        }
+        if (active) setIsLoading(false)
       }
     }
 
-    if (idUsuario) {
-      loadComments()
-    }
+    if (idUsuario) loadComments()
 
     return () => {
       active = false
     }
-  }, [shortId, idUsuario])
+  }, [shortId, idUsuario, isOnline])
+
+  useEffect(() => {
+    if (!isOnline || !idUsuario) return
+
+    let active = true
+
+    async function syncPendingComments() {
+      try {
+        const pendingComments = await getPendingComments(shortId, idUsuario)
+
+        for (const comment of pendingComments) {
+          if (!active) return
+
+          if (comment.pendingCreate) {
+            const response = await createComment(shortId, idUsuario, comment.texto)
+            await removePendingComment(comment.id)
+            await saveStoredComments(shortId, idUsuario, [response])
+          } else if (comment.pendingDelete) {
+            await deleteComment(shortId, comment.idComentario, idUsuario)
+            await removeStoredComment(comment.idComentario, shortId, idUsuario)
+          }
+        }
+
+        const response = await getComments(shortId, idUsuario)
+        await saveStoredComments(shortId, idUsuario, response)
+
+        const updated = await getStoredComments(shortId, idUsuario)
+
+        if (active) {
+          setSavedComments(updated.map((comment) => mapComment(comment, idUsuario)))
+        }
+      } catch {
+        if (active) setError('Algunos cambios siguen pendientes de sincronización.')
+      }
+    }
+
+    syncPendingComments()
+
+    return () => {
+      active = false
+    }
+  }, [isOnline, shortId, idUsuario])
 
   const comments = [...savedComments, ...randomComments].map((comment) => ({
     ...comment,
@@ -114,18 +178,38 @@ function CommentsPanel({ shortId, idUsuario }) {
   async function handleAddComment(message) {
     setError('')
 
-    try {
-      const response = await createComment(shortId, idUsuario, message)
+    const localComment = {
+      idUsuario,
+      username: 'jugador',
+      texto: message,
+      createdAt: new Date().toISOString(),
+      likes: 0
+    }
 
-      setSavedComments((previous) => [
-        mapComment(response, idUsuario),
-        ...previous
-      ])
+    try {
+      if (isOnline) {
+        try {
+          const response = await createComment(shortId, idUsuario, message)
+          await saveStoredComments(shortId, idUsuario, [response])
+          setSavedComments((previous) => [
+            mapComment(response, idUsuario),
+            ...previous
+          ])
+        } catch {
+          await addPendingComment(shortId, idUsuario, localComment)
+          const updated = await getStoredComments(shortId, idUsuario)
+          setSavedComments(updated.map((comment) => mapComment(comment, idUsuario)))
+        }
+      } else {
+        await addPendingComment(shortId, idUsuario, localComment)
+        const updated = await getStoredComments(shortId, idUsuario)
+        setSavedComments(updated.map((comment) => mapComment(comment, idUsuario)))
+      }
 
       setReplyTo('')
       return true
     } catch {
-      setError('No se pudo publicar el comentario. Inténtalo nuevamente.')
+      setError('No se pudo guardar el comentario.')
       return false
     }
   }
@@ -137,17 +221,36 @@ function CommentsPanel({ shortId, idUsuario }) {
     setError('')
 
     try {
-      await deleteComment(shortId, commentToDelete.idComentario, idUsuario)
-
-      setSavedComments((previous) =>
-        previous.filter((comment) =>
-          comment.idComentario !== commentToDelete.idComentario
+      if (commentToDelete.pendiente) {
+        await removePendingComment(commentToDelete.id)
+      } else if (isOnline) {
+        try {
+          await deleteComment(shortId, commentToDelete.idComentario, idUsuario)
+          await removeStoredComment(
+            commentToDelete.idComentario,
+            shortId,
+            idUsuario
+          )
+        } catch {
+          await markCommentForDeletion(
+            commentToDelete.idComentario,
+            shortId,
+            idUsuario
+          )
+        }
+      } else {
+        await markCommentForDeletion(
+          commentToDelete.idComentario,
+          shortId,
+          idUsuario
         )
-      )
+      }
 
+      const updated = await getStoredComments(shortId, idUsuario)
+      setSavedComments(updated.map((comment) => mapComment(comment, idUsuario)))
       setCommentToDelete(null)
     } catch {
-      setError('No se pudo eliminar el comentario.')
+      setError('No se pudo eliminar el comentario localmente.')
     } finally {
       setIsDeleting(false)
     }
@@ -162,22 +265,15 @@ function CommentsPanel({ shortId, idUsuario }) {
   }
 
   return (
-    <section
-      className="comments-panel"
-      aria-label="Comentarios del short"
-    >
+    <section className="comments-panel" aria-label="Comentarios del short">
       <header className="comments-panel-header">
         <h2>Comentarios</h2>
-
-        <span className="comments-panel-count">
-          {comments.length}
-        </span>
+        <span className="comments-panel-count">{comments.length}</span>
       </header>
 
       {!idUsuario && <p role="alert">No se pudo identificar al jugador.</p>}
-
       {isLoading && idUsuario && <p>Cargando comentarios...</p>}
-
+      {!isOnline && <p>Estás sin conexión. Se muestran los comentarios guardados.</p>}
       {error && <p role="alert">{error}</p>}
 
       <div className="comments-list">
@@ -213,18 +309,11 @@ function CommentsPanel({ shortId, idUsuario }) {
             aria-labelledby="delete-confirm-title"
             aria-describedby="delete-confirm-description"
           >
-            <div className="delete-confirm-icon" aria-hidden="true">
-              🐾
-            </div>
-
-            <h3 id="delete-confirm-title">
-              ¿Eliminar comentario?
-            </h3>
-
+            <div className="delete-confirm-icon" aria-hidden="true">🐾</div>
+            <h3 id="delete-confirm-title">¿Eliminar comentario?</h3>
             <p id="delete-confirm-description">
               ¿Estás seguro de que quieres eliminar este comentario? Esta acción no se puede deshacer.
             </p>
-
             <div className="delete-confirm-actions">
               <button
                 type="button"
@@ -234,7 +323,6 @@ function CommentsPanel({ shortId, idUsuario }) {
               >
                 Cancelar
               </button>
-
               <button
                 type="button"
                 className="delete-confirm-accept"
