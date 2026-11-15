@@ -47,7 +47,7 @@ function mapComment(comment, idUsuario) {
     usuario: `@${(comment.username || 'jugador').replace(/^@/, '')}`,
     esCreador: Number(comment.idUsuario) === Number(idUsuario),
     avatar: Number(comment.idUsuario) === Number(idUsuario)
-      ? '/images/Avatar.png'
+      ? '/images/Avatar.webp'
       : null,
     createdAt: comment.createdAt,
     tiempo: '',

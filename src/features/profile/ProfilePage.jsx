@@ -19,7 +19,7 @@ function ProfilePage({ player, onOpenShort }) {
 
       <div className="profile-cover">
         <img
-          src="/images/portada.png"
+          src="/images/portada.webp"
           alt="Portada del canal El loquito"
           className="profile-cover-image"
         />
@@ -28,7 +28,7 @@ function ProfilePage({ player, onOpenShort }) {
       <header className="profile-header">
         <img
           className="profile-avatar"
-          src="/images/Avatar.png"
+          src="/images/Avatar.webp"
           alt="Foto de perfil de El loquito"
         />
 
