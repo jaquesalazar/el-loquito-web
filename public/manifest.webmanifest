@@ -1,8 +1,9 @@
 
 {
-  "name": "CatTube - El loquito",
+  "id": "/",
+  "name": "CatTube - They Are Not Pigeons",
   "short_name": "CatTube",
-  "description": "Plataforma de shorts del proyecto El loquito.",
+  "description": "Plataforma de shorts de They Are Not Pigeons.",
   "lang": "es-MX",
   "start_url": "/",
   "scope": "/",
@@ -29,6 +30,21 @@
       "src": "/icons/icon-512.png",
       "sizes": "512x512",
       "type": "image/png"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/screenshots/desktop.png",
+      "sizes": "1895x905",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "CatTube en escritorio"
+    },
+    {
+      "src": "/screenshots/mobile.png",
+      "sizes": "572x802",
+      "type": "image/png",
+      "label": "CatTube en dispositivos móviles"
     }
   ]
 }

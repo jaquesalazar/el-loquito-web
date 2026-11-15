@@ -79,6 +79,7 @@ function ShortPlayer({ short, idUsuario }) {
             key={short.videoUrl}
             ref={videoRef}
             className="short-player-media"
+            crossOrigin="anonymous"
             src={short.videoUrl}
             playsInline
             preload="metadata"

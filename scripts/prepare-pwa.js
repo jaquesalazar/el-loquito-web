@@ -1,4 +1,4 @@
-/* Prepara la caché de producción de CatTube con los archivos generados por Vite. */
+/* Prepara y versiona la caché de recursos. */
 
 import { readdir, readFile, writeFile } from 'node:fs/promises'
 import { join, relative, sep } from 'node:path'
@@ -41,20 +41,24 @@ async function preparePWA() {
         path === 'manifest.webmanifest' ||
         path.startsWith('assets/') ||
         path.startsWith('icons/') ||
-        path.startsWith('images/')
+        path.startsWith('images/') ||
+        path.startsWith('screenshots/')
       )
     })
-    .map((path) => `/${path}`)
     .sort()
 
   const appShell = ['/', ...resources]
   const serviceWorker = await readFile(serviceWorkerPath, 'utf8')
+  const hash = createHash('sha256')
 
-  const version = createHash('sha256')
-    .update(JSON.stringify(appShell))
-    .update(serviceWorker)
-    .digest('hex')
-    .slice(0, 12)
+  hash.update(serviceWorker)
+
+  for (const resource of resources) {
+    hash.update(resource)
+    hash.update(await readFile(join(distDirectory, resource)))
+  }
+
+  const version = hash.digest('hex').slice(0, 12)
 
   const updatedServiceWorker = serviceWorker
     .replace(
