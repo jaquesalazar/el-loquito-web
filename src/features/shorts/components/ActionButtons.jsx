@@ -1,6 +1,6 @@
 // Acciones de interacción para cada video de CatTube.
 
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { updateVideoLike } from '../shortsService'
 import './ActionButtons.css'
 
@@ -65,10 +65,6 @@ function ActionButtons({ short, idUsuario, onToast }) {
   const [liked, setLiked] = useState(Boolean(short.liked))
   const [saved, setSaved] = useState(false)
   const [updatingLike, setUpdatingLike] = useState(false)
-
-  useEffect(() => {
-    setLiked(Boolean(short.liked))
-  }, [short.id, short.liked])
 
   const totalLikes = short.likes + (liked ? 1 : 0)
 

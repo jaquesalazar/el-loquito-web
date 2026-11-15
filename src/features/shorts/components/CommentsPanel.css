@@ -1,18 +1,13 @@
-/* panel de comentarios */
-
 .comments-panel {
   display: flex;
   flex-direction: column;
-
   width: 100%;
   height: 100%;
   min-height: 500px;
   min-width: 0;
-
   background-color: #ffffff;
   border: 1px solid #e9e9e4;
   border-radius: 14px;
-
   overflow: hidden;
 }
 
@@ -20,20 +15,15 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-
   flex-shrink: 0;
-
   padding: 20px 22px;
-
   background-color: #ffffff;
   border-bottom: 1px solid #eeeeee;
 }
 
 .comments-panel-header h2 {
   margin: 0;
-
   color: #292929;
-
   font-family: 'Nunito', sans-serif;
   font-size: 19px;
   font-weight: 800;
@@ -43,16 +33,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
-
   min-width: 32px;
   height: 28px;
   padding: 0 9px;
-
   background-color: #eef2e7;
   color: #44581f;
-
   border-radius: 16px;
-
   font-family: 'Nunito', sans-serif;
   font-size: 12px;
   font-weight: 800;
@@ -61,15 +47,11 @@
 .comments-list {
   flex: 1;
   min-height: 0;
-
   padding: 0 18px;
-
   overflow-y: auto;
   overflow-x: hidden;
-
   scrollbar-width: thin;
   scrollbar-color: #6e8b3e #f1f1ed;
-
   overscroll-behavior: contain;
 }
 
@@ -95,38 +77,61 @@
   margin-top: auto;
 }
 
-@media (max-width: 700px) {
-  .comments-panel {
-    min-height: 420px;
-    border-radius: 10px;
-  }
-
-  .comments-panel-header {
-    padding: 16px;
-  }
-
-  .comments-panel-header h2 {
-    font-size: 17px;
-  }
-
-  .comments-list {
-    padding: 0 12px;
-  }
+.comments-offline-alert {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 12px 18px;
+  padding: 12px 14px;
+  background-color: #f1f4e9;
+  border: 1px solid #dce5cc;
+  border-radius: 12px;
+  color: #44581f;
+  flex-shrink: 0;
 }
 
-/* Ventana de confirmación para eliminar comentarios */
+.comments-offline-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+  background-color: #e3ebd6;
+  border-radius: 50%;
+}
+
+.comments-offline-icon svg {
+  width: 19px;
+  height: 19px;
+}
+
+.comments-offline-message {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  font-family: 'Nunito', sans-serif;
+}
+
+.comments-offline-message strong {
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.comments-offline-message span {
+  color: #687456;
+  font-size: 12px;
+  line-height: 1.4;
+}
 
 .delete-confirm-overlay {
   position: fixed;
   inset: 0;
   z-index: 1000;
-
   display: flex;
   align-items: center;
   justify-content: center;
-
   padding: 20px;
-
   background: rgba(35, 40, 28, 0.45);
   backdrop-filter: blur(3px);
 }
@@ -135,13 +140,10 @@
   width: 100%;
   max-width: 370px;
   padding: 28px;
-
   background: #ffffff;
   border: 1px solid #e9e9e4;
   border-radius: 20px;
-
   box-shadow: 0 15px 45px rgba(0, 0, 0, 0.18);
-
   text-align: center;
   font-family: 'Nunito', sans-serif;
   animation: deleteModalAppear 0.2s ease-out;
@@ -151,20 +153,16 @@
   display: flex;
   align-items: center;
   justify-content: center;
-
   width: 58px;
   height: 58px;
   margin: 0 auto 16px;
-
   background: #f1f4e9;
   border-radius: 50%;
-
   font-size: 28px;
 }
 
 .delete-confirm-modal h3 {
   margin: 0 0 9px;
-
   color: #292929;
   font-size: 20px;
   font-weight: 800;
@@ -172,7 +170,6 @@
 
 .delete-confirm-modal p {
   margin: 0 0 24px;
-
   color: #77776f;
   font-size: 14px;
   line-height: 1.5;
@@ -187,14 +184,11 @@
   flex: 1;
   min-height: 42px;
   padding: 10px 14px;
-
   border: none;
   border-radius: 12px;
-
   font-family: 'Nunito', sans-serif;
   font-size: 14px;
   font-weight: 800;
-
   cursor: pointer;
   transition: background 0.2s, transform 0.2s;
 }
@@ -230,6 +224,30 @@
   to {
     opacity: 1;
     transform: translateY(0) scale(1);
+  }
+}
+
+@media (max-width: 700px) {
+  .comments-panel {
+    min-height: 420px;
+    border-radius: 10px;
+  }
+
+  .comments-panel-header {
+    padding: 16px;
+  }
+
+  .comments-panel-header h2 {
+    font-size: 17px;
+  }
+
+  .comments-list {
+    padding: 0 12px;
+  }
+
+  .comments-offline-alert {
+    margin: 10px 12px;
+    padding: 10px;
   }
 }
 

@@ -1,12 +1,12 @@
-// Hook para navegar entre Shorts mediante botones, teclado y rueda del mouse.
+// Hook para navegar entre Shorts mediante botones y teclado.
 
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
 export function useShortsNavigation(totalShorts, initialIndex = 0) {
-  const [currentIndex, setCurrentIndex] = useState(initialIndex)
+  const [currentIndex, setCurrentIndex] = useState(() =>
+    Math.min(Math.max(initialIndex, 0), Math.max(0, totalShorts - 1))
+  )
   const [direction, setDirection] = useState('down')
-
-  const lastNavigationRef = useRef(0)
 
   const safeIndex = Math.min(
     currentIndex,
@@ -16,16 +16,6 @@ export function useShortsNavigation(totalShorts, initialIndex = 0) {
   const isFirst = safeIndex === 0
   const isLast = totalShorts === 0 || safeIndex >= totalShorts - 1
 
-  useEffect(() => {
-    const validIndex = Math.min(
-      Math.max(initialIndex, 0),
-      Math.max(0, totalShorts - 1)
-    )
-
-    setCurrentIndex(validIndex)
-    setDirection('down')
-  }, [initialIndex, totalShorts])
-
   const goToShort = useCallback(
     (newIndex) => {
       if (newIndex < 0 || newIndex >= totalShorts) {
@@ -33,17 +23,11 @@ export function useShortsNavigation(totalShorts, initialIndex = 0) {
       }
 
       setCurrentIndex((previousIndex) => {
-        const previousSafeIndex = Math.min(
-          previousIndex,
-          Math.max(0, totalShorts - 1)
-        )
-
-        if (newIndex === previousSafeIndex) {
-          return previousSafeIndex
+        if (newIndex === previousIndex) {
+          return previousIndex
         }
 
-        setDirection(newIndex > previousSafeIndex ? 'down' : 'up')
-
+        setDirection(newIndex > previousIndex ? 'down' : 'up')
         return newIndex
       })
     },
@@ -52,35 +36,25 @@ export function useShortsNavigation(totalShorts, initialIndex = 0) {
 
   const nextShort = useCallback(() => {
     setCurrentIndex((previousIndex) => {
-      const previousSafeIndex = Math.min(
-        previousIndex,
-        Math.max(0, totalShorts - 1)
-      )
-
-      if (totalShorts === 0 || previousSafeIndex >= totalShorts - 1) {
-        return previousSafeIndex
+      if (totalShorts === 0 || previousIndex >= totalShorts - 1) {
+        return previousIndex
       }
 
       setDirection('down')
-      return previousSafeIndex + 1
+      return previousIndex + 1
     })
   }, [totalShorts])
 
   const previousShort = useCallback(() => {
     setCurrentIndex((previousIndex) => {
-      const previousSafeIndex = Math.min(
-        previousIndex,
-        Math.max(0, totalShorts - 1)
-      )
-
-      if (previousSafeIndex <= 0) {
+      if (previousIndex <= 0) {
         return 0
       }
 
       setDirection('up')
-      return previousSafeIndex - 1
+      return previousIndex - 1
     })
-  }, [totalShorts])
+  }, [])
 
   useEffect(() => {
     function handleKeyDown(event) {
@@ -111,44 +85,6 @@ export function useShortsNavigation(totalShorts, initialIndex = 0) {
 
     return () => {
       window.removeEventListener('keydown', handleKeyDown)
-    }
-  }, [nextShort, previousShort])
-
-  useEffect(() => {
-    function handleWheel(event) {
-      if (event.target instanceof Element) {
-        if (event.target.closest('.comments-list')) {
-          return
-        }
-      }
-
-      if (Math.abs(event.deltaY) < 15) {
-        return
-      }
-
-      const now = Date.now()
-
-      if (now - lastNavigationRef.current < 650) {
-        return
-      }
-
-      lastNavigationRef.current = now
-
-      event.preventDefault()
-
-      if (event.deltaY > 0) {
-        nextShort()
-      } else {
-        previousShort()
-      }
-    }
-
-    window.addEventListener('wheel', handleWheel, {
-      passive: false
-    })
-
-    return () => {
-      window.removeEventListener('wheel', handleWheel)
     }
   }, [nextShort, previousShort])
 

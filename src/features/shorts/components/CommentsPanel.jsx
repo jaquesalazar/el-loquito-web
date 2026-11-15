@@ -1,4 +1,3 @@
-
 // Panel de comentarios reales y aleatorios de CatTube.
 
 import { useEffect, useState } from 'react'
@@ -42,12 +41,14 @@ function formatCommentTime(createdAt, currentTime) {
 function mapComment(comment, idUsuario) {
   return {
     ...comment,
-    id: comment.id || `db-${comment.idComentario}`,
+    id: `real-${idUsuario}-${comment.idComentario ?? comment.id}`,
     idComentario: comment.idComentario,
     idUsuario: comment.idUsuario,
     usuario: `@${(comment.username || 'jugador').replace(/^@/, '')}`,
-    esCreador: comment.idUsuario === idUsuario,
-    avatar: comment.idUsuario === idUsuario ? '/images/Avatar.png' : null,
+    esCreador: Number(comment.idUsuario) === Number(idUsuario),
+    avatar: Number(comment.idUsuario) === Number(idUsuario)
+      ? '/images/Avatar.png'
+      : null,
     createdAt: comment.createdAt,
     tiempo: '',
     texto: comment.texto,
@@ -88,27 +89,32 @@ function CommentsPanel({ shortId, idUsuario }) {
       try {
         const localComments = await getStoredComments(shortId, idUsuario)
 
-        if (active) {
-          setSavedComments(localComments.map((comment) => mapComment(comment, idUsuario)))
+        if (!active) return
+
+        setSavedComments(
+          localComments.map(comment => mapComment(comment, idUsuario))
+        )
+        if (!isOnline) {
+          return
         }
+        try {
+          const response = await getComments(shortId, idUsuario)
 
-        if (isOnline) {
-          try {
-            const response = await getComments(shortId, idUsuario)
-            await saveStoredComments(shortId, idUsuario, response)
+          if (!active) return
 
-            const updatedLocalComments = await getStoredComments(shortId, idUsuario)
+          await saveStoredComments(shortId, idUsuario, response)
 
-            if (active) {
-              setSavedComments(updatedLocalComments.map((comment) => mapComment(comment, idUsuario)))
-            }
-          } catch {
-            if (active && localComments.length === 0) {
-              setError('No se pudieron cargar los comentarios.')
-            }
+          const updatedLocalComments = await getStoredComments(shortId, idUsuario)
+
+          if (!active) return
+
+          setSavedComments(
+            updatedLocalComments.map(comment => mapComment(comment, idUsuario))
+          )
+        } catch {
+          if (active && localComments.length === 0) {
+            setError('No se pudieron cargar los comentarios.')
           }
-        } else if (localComments.length === 0 && active) {
-          setError('No hay comentarios guardados para este video.')
         }
       } catch {
         if (active) {
@@ -154,10 +160,14 @@ function CommentsPanel({ shortId, idUsuario }) {
         const updated = await getStoredComments(shortId, idUsuario)
 
         if (active) {
-          setSavedComments(updated.map((comment) => mapComment(comment, idUsuario)))
+          setSavedComments(
+            updated.map(comment => mapComment(comment, idUsuario))
+          )
         }
       } catch {
-        if (active) setError('Algunos cambios siguen pendientes de sincronización.')
+        if (active) {
+          setError('Algunos cambios siguen pendientes de sincronización.')
+        }
       }
     }
 
@@ -168,7 +178,7 @@ function CommentsPanel({ shortId, idUsuario }) {
     }
   }, [isOnline, shortId, idUsuario])
 
-  const comments = [...savedComments, ...randomComments].map((comment) => ({
+  const comments = [...savedComments, ...randomComments].map(comment => ({
     ...comment,
     tiempo: comment.createdAt && currentTime
       ? formatCommentTime(comment.createdAt, currentTime)
@@ -191,19 +201,23 @@ function CommentsPanel({ shortId, idUsuario }) {
         try {
           const response = await createComment(shortId, idUsuario, message)
           await saveStoredComments(shortId, idUsuario, [response])
-          setSavedComments((previous) => [
+          setSavedComments(previous => [
             mapComment(response, idUsuario),
             ...previous
           ])
         } catch {
           await addPendingComment(shortId, idUsuario, localComment)
           const updated = await getStoredComments(shortId, idUsuario)
-          setSavedComments(updated.map((comment) => mapComment(comment, idUsuario)))
+          setSavedComments(
+            updated.map(comment => mapComment(comment, idUsuario))
+          )
         }
       } else {
         await addPendingComment(shortId, idUsuario, localComment)
         const updated = await getStoredComments(shortId, idUsuario)
-        setSavedComments(updated.map((comment) => mapComment(comment, idUsuario)))
+        setSavedComments(
+          updated.map(comment => mapComment(comment, idUsuario))
+        )
       }
 
       setReplyTo('')
@@ -247,7 +261,9 @@ function CommentsPanel({ shortId, idUsuario }) {
       }
 
       const updated = await getStoredComments(shortId, idUsuario)
-      setSavedComments(updated.map((comment) => mapComment(comment, idUsuario)))
+      setSavedComments(
+        updated.map(comment => mapComment(comment, idUsuario))
+      )
       setCommentToDelete(null)
     } catch {
       setError('No se pudo eliminar el comentario localmente.')
@@ -272,12 +288,39 @@ function CommentsPanel({ shortId, idUsuario }) {
       </header>
 
       {!idUsuario && <p role="alert">No se pudo identificar al jugador.</p>}
+
       {isLoading && idUsuario && <p>Cargando comentarios...</p>}
-      {!isOnline && <p>Estás sin conexión. Se muestran los comentarios guardados.</p>}
+
+      {!isOnline && (
+        <div className="comments-offline-alert" role="status">
+          <span className="comments-offline-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path
+                d="M5 16.2A4.5 4.5 0 0 1 6.5 7.5 6 6 0 0 1 18 9.2a3.5 3.5 0 0 1 .5 7"
+                stroke="currentColor"
+                strokeWidth="1.8"
+                strokeLinecap="round"
+              />
+              <path
+                d="M4 4l16 16"
+                stroke="currentColor"
+                strokeWidth="1.8"
+                strokeLinecap="round"
+              />
+            </svg>
+          </span>
+
+          <span className="comments-offline-message">
+            <strong>Estás sin conexión</strong>
+            <span>Se muestran los comentarios guardados en tu dispositivo.</span>
+          </span>
+        </div>
+      )}
+
       {error && <p role="alert">{error}</p>}
 
       <div className="comments-list">
-        {comments.map((comment) => (
+        {comments.map(comment => (
           <CommentItem
             key={comment.id}
             comment={comment}
@@ -296,7 +339,7 @@ function CommentsPanel({ shortId, idUsuario }) {
       {commentToDelete && (
         <div
           className="delete-confirm-overlay"
-          onClick={(event) => {
+          onClick={event => {
             if (event.target === event.currentTarget && !isDeleting) {
               setCommentToDelete(null)
             }

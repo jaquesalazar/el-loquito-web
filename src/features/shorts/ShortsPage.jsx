@@ -1,4 +1,3 @@
-
 // Pantalla de reproducción de Shorts con soporte para contenido guardado sin conexión.
 
 import { useCallback, useState } from 'react'

@@ -149,6 +149,71 @@ function Sidebar({ currentPage, onNavigate, username, onLogout }) {
           </nav>
         </div>
 
+        <div className="mobile-account-tools">
+          <div className="mobile-account-info">
+            <span className="mobile-brand">CatTube</span>
+            <span className="mobile-player-name" title={username}>
+              {username}
+            </span>
+            <span className="mobile-player-status">
+              <span
+                className={`status-dot ${isOnline ? '' : 'status-dot-offline'}`}
+                aria-hidden="true"
+              ></span>
+              {isOnline ? 'En línea' : 'Sin conexión'}
+            </span>
+          </div>
+
+          <div className="mobile-account-actions">
+            <button
+              type="button"
+              className="mobile-install-button"
+              onClick={() => setIsInstallModalOpen(true)}
+              aria-label="Instalar aplicación"
+              title="Instalar aplicación"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                width="21"
+                height="21"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M12 3v12" />
+                <path d="m7 10 5 5 5-5" />
+                <path d="M5 19h14" />
+              </svg>
+            </button>
+
+            <button
+              type="button"
+              className="mobile-logout-button"
+              onClick={onLogout}
+              aria-label="Cerrar sesión"
+              title="Cerrar sesión"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                width="21"
+                height="21"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M12 2v10" />
+                <path d="M6.2 5.8a9 9 0 1 0 11.6 0" />
+              </svg>
+            </button>
+          </div>
+        </div>
+
         <div className="sidebar-bottom">
           <button
             type="button"
@@ -165,7 +230,21 @@ function Sidebar({ currentPage, onNavigate, username, onLogout }) {
             className="logout-button"
             onClick={onLogout}
           >
-            <span aria-hidden="true">↪</span>
+            <span aria-hidden="true">
+              <svg
+                viewBox="0 0 24 24"
+                width="21"
+                height="21"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M12 2v10" />
+                <path d="M6.2 5.8a9 9 0 1 0 11.6 0" />
+              </svg>
+            </span>
             <span>Cerrar sesión</span>
           </button>
 
@@ -237,7 +316,7 @@ function Sidebar({ currentPage, onNavigate, username, onLogout }) {
             <span className="install-modal-eyebrow">CAT TUBE PARA ANDROID</span>
 
             <h2 id="install-modal-title">
-              ¡Nuestra app ya está disponible! 
+              ¡Nuestra app ya está disponible!
             </h2>
 
             <p id="install-modal-description" className="install-modal-description">

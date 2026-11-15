@@ -10,7 +10,7 @@
   margin-left: 272px;
   margin-top: 0;
   margin-right: 0;
-  padding: 22px 24px 30px;
+  padding: 26px 28px 32px;
   min-height: 100vh;
   background-color: var(--content-bg);
   border: none;
@@ -24,13 +24,16 @@
 
 @media (max-width: 700px) {
   .main-content {
-    margin-left: 86px;
-    margin-top: 0;
-    margin-right: 0;
-    padding: 14px;
+    margin: 0;
+    padding: 86px 14px 100px;
+    min-height: 100vh;
+    box-sizing: border-box;
   }
 
   .main-content:has(.shorts-page) {
-    padding: 0;
+    margin: 0;
+    padding: 64px 0 82px;
+    min-height: 100vh;
+    box-sizing: border-box;
   }
 }
