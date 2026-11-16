@@ -150,6 +150,25 @@ async function handleVideoRequest(request) {
   }
 }
 
+async function handleImageRequest(request) {
+  const cache = await caches.open(CACHE_NAME)
+  const cachedResponse = await cache.match(request)
+
+  if (cachedResponse) return cachedResponse
+
+  try {
+    const response = await fetch(request)
+
+    if (response.ok && response.type === 'basic') {
+      await cache.put(request, response.clone())
+    }
+
+    return response
+  } catch {
+    return (await cache.match(request)) || Response.error()
+  }
+}
+
 self.addEventListener('fetch', (event) => {
   const request = event.request
   const url = new URL(request.url)
@@ -166,6 +185,18 @@ self.addEventListener('fetch', (event) => {
   }
 
   if (url.origin !== self.location.origin) return
+
+  if (
+    self.location.hostname === 'localhost' &&
+    (
+      url.pathname.startsWith('/@') ||
+      url.pathname.startsWith('/src/') ||
+      url.pathname.startsWith('/node_modules/') ||
+      url.pathname.startsWith('/.vite/')
+    )
+  ) {
+    return
+  }
 
   if (url.pathname === '/connection-check.txt') {
     event.respondWith(
@@ -188,6 +219,11 @@ self.addEventListener('fetch', (event) => {
         }
       })()
     )
+    return
+  }
+
+  if (request.destination === 'image') {
+    event.respondWith(handleImageRequest(request))
     return
   }
 
@@ -227,7 +263,13 @@ self.addEventListener('fetch', (event) => {
       if (cachedResponse) return cachedResponse
 
       try {
-        return await fetch(request)
+        const response = await fetch(request)
+
+        if (response.ok && response.type === 'basic') {
+          await cache.put(request, response.clone())
+        }
+
+        return response
       } catch {
         return Response.error()
       }

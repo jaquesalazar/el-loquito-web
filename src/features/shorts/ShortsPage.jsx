@@ -1,3 +1,4 @@
+
 // Pantalla de reproducción de Shorts con soporte para contenido guardado sin conexión.
 
 import { useCallback, useState } from 'react'
@@ -78,7 +79,7 @@ function ShortsPage({ idUsuario, initialShortId, onBackToProfile }) {
 
     if (status === 'empty' || shorts.length === 0) {
       return (
-        <div className="shorts-player-state">
+        <div className="shorts-player-state shorts-empty-state">
           <svg
             width="52"
             height="52"

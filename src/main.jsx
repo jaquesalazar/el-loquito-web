@@ -12,6 +12,4 @@ createRoot(document.getElementById('root')).render(
   </StrictMode>,
 )
 
-if (import.meta.env.PROD) {
-  registerSW()
-}
+registerSW()

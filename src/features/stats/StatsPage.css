@@ -405,3 +405,42 @@
     animation: none;
   }
 }
+
+.stats-feedback {
+  min-height: 340px;
+  padding: 40px 24px;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  gap: 14px;
+}
+
+.stats-feedback svg {
+  width: 76px;
+  height: 76px;
+  padding: 11px;
+  border-radius: 50%;
+  background: #F0EBD9;
+}
+
+.stats-feedback h2 {
+  margin: 0;
+  color: #44581F;
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: -0.3px;
+}
+
+.stats-feedback p {
+  max-width: 390px;
+  color: #777568;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+@media (max-width: 480px) {
+  .stats-feedback {
+    min-height: 300px;
+    padding: 32px 16px;
+  }
+}
