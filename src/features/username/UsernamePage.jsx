@@ -35,7 +35,18 @@ function UsernamePage({ onLogin }) {
 
   return (
     <main className="username-page">
-      <div className="username-background" aria-hidden="true"></div>
+      <video
+        className="username-background"
+        autoPlay
+        muted
+        loop
+        playsInline
+        aria-hidden="true"
+      >
+        <source src="/video/wallpaper2.mp4" type="video/mp4" />
+      </video>
+
+      <div className="username-mobile-background" aria-hidden="true"></div>
       <div className="username-overlay" aria-hidden="true"></div>
 
       <section className="username-content">

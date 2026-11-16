@@ -11,7 +11,7 @@ import './App.css'
 function App() {
   const [player, setPlayer] = useState(() => {
     try {
-      const savedPlayer = JSON.parse(sessionStorage.getItem('cattube-player'))
+      const savedPlayer = JSON.parse(localStorage.getItem('cattube-player'))
 
       return savedPlayer?.idUsuario && savedPlayer?.username
         ? savedPlayer
@@ -33,9 +33,9 @@ function App() {
 
   useEffect(() => {
     if (player) {
-      sessionStorage.setItem('cattube-player', JSON.stringify(player))
+      localStorage.setItem('cattube-player', JSON.stringify(player))
     } else {
-      sessionStorage.removeItem('cattube-player')
+      localStorage.removeItem('cattube-player')
     }
   }, [player])
 
@@ -52,7 +52,7 @@ function App() {
     setPlayer(null)
     setCurrentPage('profile')
     setSelectedShortId(null)
-    sessionStorage.removeItem('cattube-player')
+    localStorage.removeItem('cattube-player')
     sessionStorage.removeItem('cattube-current-page')
   }
 
