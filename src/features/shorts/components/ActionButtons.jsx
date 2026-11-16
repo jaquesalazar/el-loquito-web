@@ -71,13 +71,16 @@ function ActionButtons({ short, idUsuario, onToast }) {
   async function handleLike() {
     if (updatingLike) return
 
+    const previousLiked = liked
     const nextLiked = !liked
+
+    setLiked(nextLiked)
     setUpdatingLike(true)
 
     try {
-      const progress = await updateVideoLike(idUsuario, short.id, nextLiked)
-      setLiked(progress.liked)
+      await updateVideoLike(idUsuario, short.id, nextLiked)
     } catch {
+      setLiked(previousLiked)
       onToast?.('No se pudo actualizar el me gusta')
     } finally {
       setUpdatingLike(false)

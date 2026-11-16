@@ -30,6 +30,41 @@ function mapVideo(video, progress) {
   }
 }
 
+function getShortsCacheKey(idUsuario) {
+  return `cattube-shorts-metadata-${idUsuario}`
+}
+
+function getPendingLikesKey(idUsuario) {
+  return `cattube-pending-likes-${idUsuario}`
+}
+
+function updateCachedLike(idUsuario, idVideo, liked) {
+  try {
+    const key = getShortsCacheKey(idUsuario)
+    const shorts = JSON.parse(localStorage.getItem(key) || '[]')
+    const updatedShorts = shorts.map((short) =>
+      short.id === idVideo ? { ...short, liked } : short
+    )
+
+    localStorage.setItem(key, JSON.stringify(updatedShorts))
+  } catch {
+    return
+  }
+}
+
+function savePendingLike(idUsuario, idVideo, liked) {
+  try {
+    const key = getPendingLikesKey(idUsuario)
+    const pendingLikes = JSON.parse(localStorage.getItem(key) || '{}')
+
+    pendingLikes[idVideo] = liked
+    localStorage.setItem(key, JSON.stringify(pendingLikes))
+    updateCachedLike(idUsuario, idVideo, liked)
+  } catch {
+    throw new Error('No se pudo guardar el me gusta pendiente.')
+  }
+}
+
 export async function getPlayerShorts(idUsuario) {
   if (!idUsuario) {
     throw new Error('Se necesita el ID del jugador.')
@@ -53,13 +88,63 @@ export async function getShorts(idUsuario) {
 }
 
 export async function updateVideoLike(idUsuario, idVideo, liked) {
-  return apiRequest(
-    `/usuarios/${idUsuario}/videos/${idVideo}/progreso/like`,
-    {
-      method: 'POST',
-      body: JSON.stringify({ liked })
+  try {
+    const progress = await apiRequest(
+      `/usuarios/${idUsuario}/videos/${idVideo}/progreso/like`,
+      {
+        method: 'POST',
+        body: JSON.stringify({ liked })
+      }
+    )
+
+    updateCachedLike(idUsuario, idVideo, progress.liked)
+    return progress
+  } catch (error) {
+    if (!navigator.onLine || error instanceof TypeError) {
+      savePendingLike(idUsuario, idVideo, liked)
+      return { liked }
     }
-  )
+
+    throw error
+  }
+}
+
+export async function syncPendingLikes(idUsuario) {
+  if (!idUsuario || !navigator.onLine) return
+
+  const key = getPendingLikesKey(idUsuario)
+  let pendingLikes = {}
+
+  try {
+    pendingLikes = JSON.parse(localStorage.getItem(key) || '{}')
+  } catch {
+    return
+  }
+
+  for (const [idVideo, liked] of Object.entries(pendingLikes)) {
+    if (!navigator.onLine) return
+
+    await apiRequest(
+      `/usuarios/${idUsuario}/videos/${idVideo}/progreso/like`,
+      {
+        method: 'POST',
+        body: JSON.stringify({ liked })
+      }
+    )
+
+    updateCachedLike(idUsuario, Number(idVideo), liked)
+
+    try {
+      const currentPendingLikes = JSON.parse(localStorage.getItem(key) || '{}')
+
+      if (currentPendingLikes[idVideo] === liked) {
+        delete currentPendingLikes[idVideo]
+        localStorage.setItem(key, JSON.stringify(currentPendingLikes))
+      }
+    } catch {
+      return
+    }
+  }
 }
 
 export async function registerVideoView(idUsuario, idVideo) {
