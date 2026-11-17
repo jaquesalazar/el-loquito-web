@@ -10,6 +10,16 @@ function Sidebar({ currentPage, onNavigate, username, onLogout }) {
   const isBackendOnline = useBackendStatus()
   const [isInstallModalOpen, setIsInstallModalOpen] = useState(false)
 
+  const backendStatusText = !isOnline
+    ? 'Servidor sin conexión'
+    : isBackendOnline === null
+      ? 'Comprobando servidor'
+      : isBackendOnline
+        ? 'Servidor conectado'
+        : 'Servidor desconectado'
+
+  const isBackendOffline = isOnline && isBackendOnline === false
+
   useEffect(() => {
     if (!isInstallModalOpen) return
 
@@ -168,10 +178,10 @@ function Sidebar({ currentPage, onNavigate, username, onLogout }) {
 
             <span className="mobile-player-status">
               <span
-                className={`status-dot ${isBackendOnline ? '' : 'status-dot-offline'}`}
+                className={`status-dot ${isBackendOffline ? 'status-dot-offline' : ''}`}
                 aria-hidden="true"
               ></span>
-              {isBackendOnline ? 'Servidor conectado' : 'Servidor desconectado'}
+              {backendStatusText}
             </span>
           </div>
 
@@ -271,10 +281,10 @@ function Sidebar({ currentPage, onNavigate, username, onLogout }) {
 
           <div className="sidebar-status" role="status" aria-live="polite">
             <span
-              className={`status-dot ${isBackendOnline ? '' : 'status-dot-offline'}`}
+              className={`status-dot ${isBackendOffline ? 'status-dot-offline' : ''}`}
               aria-hidden="true"
             ></span>
-            <span>{isBackendOnline ? 'Servidor conectado' : 'Servidor desconectado'}</span>
+            <span>{backendStatusText}</span>
           </div>
         </div>
       </aside>
