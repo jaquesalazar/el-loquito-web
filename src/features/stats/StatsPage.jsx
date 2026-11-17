@@ -1,4 +1,3 @@
-
 // Pantalla de estadísticas del jugador en CatTube.
 
 import StatCard from './StatCard'
@@ -9,6 +8,8 @@ import useStats from './useStats'
 import { formatGameMoney, getMoneyLegend } from './config'
 import OfflineBanner from '../../shared/components/OfflineBanner'
 import ErrorState from '../../shared/components/ErrorState'
+import useOnlineStatus from '../../shared/hooks/useOnlineStatus'
+import useBackendStatus from '../../shared/hooks/useBackendStatus'
 import './StatsPage.css'
 
 const formatNumber = (value) =>
@@ -16,10 +17,18 @@ const formatNumber = (value) =>
 
 function StatsPage({ idUsuario, onBackToProfile }) {
   const { stats, state, retry } = useStats(idUsuario)
+  const isOnline = useOnlineStatus()
+  const isBackendOnline = useBackendStatus()
 
   const isLoading = state === 'loading'
   const isOffline = state === 'offline'
   const hasData = stats !== null
+
+  const offlineMessage = !isOnline
+    ? 'Sin conexión a Internet. Mostrando las últimas estadísticas guardadas.'
+    : !isBackendOnline
+      ? 'Servidor no disponible. Mostrando las últimas estadísticas guardadas.'
+      : 'No se pudieron actualizar las estadísticas. Mostrando los últimos datos guardados.'
 
   function renderContent() {
     if (isLoading) {
@@ -153,7 +162,7 @@ function StatsPage({ idUsuario, onBackToProfile }) {
       {isOffline && (
         <OfflineBanner
           variant="page"
-          message="Sin conexión. Mostrando las últimas estadísticas guardadas."
+          message={offlineMessage}
         />
       )}
 

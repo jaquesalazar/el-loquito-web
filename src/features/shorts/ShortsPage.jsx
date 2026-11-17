@@ -1,4 +1,3 @@
-
 // Pantalla de reproducción de Shorts con soporte para contenido guardado sin conexión.
 
 import { useCallback, useState } from 'react'
@@ -10,11 +9,21 @@ import CommentsPanel from './components/CommentsPanel'
 import ShortNavigator from './components/ShortNavigator'
 import ErrorState from '../../shared/components/ErrorState'
 import OfflineBanner from '../../shared/components/OfflineBanner'
+import useOnlineStatus from '../../shared/hooks/useOnlineStatus'
+import useBackendStatus from '../../shared/hooks/useBackendStatus'
 import Toast from './components/Toast'
 import './ShortsPage.css'
 
 function ShortsPage({ idUsuario, initialShortId, onBackToProfile }) {
   const { shorts, status, retry } = usePlayerShorts(idUsuario)
+  const isOnline = useOnlineStatus()
+  const isBackendOnline = useBackendStatus()
+
+  const offlineMessage = !isOnline
+    ? 'Sin conexión a Internet. Mostrando videos guardados.'
+    : !isBackendOnline
+      ? 'Servidor no disponible. Mostrando videos guardados.'
+      : 'No se pudo conectar al servidor. Mostrando videos guardados.'
 
   const initialIndex = shorts.findIndex(
     (short) => String(short.id) === String(initialShortId)
@@ -114,7 +123,10 @@ function ShortsPage({ idUsuario, initialShortId, onBackToProfile }) {
       <>
         {status === 'offline' && (
           <div className="offline-banner-spacing">
-            <OfflineBanner variant="inline" />
+            <OfflineBanner
+              variant="inline"
+              message={offlineMessage}
+            />
           </div>
         )}
 

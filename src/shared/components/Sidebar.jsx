@@ -1,11 +1,13 @@
-/* Menú lateral de CatTube con navegación, estado de conexión y modal de descarga. */
+/* Menú lateral de CatTube con navegación, estados de conexión y modal de descarga. */
 
 import { useEffect, useState } from 'react'
 import './Sidebar.css'
 import useOnlineStatus from '../hooks/useOnlineStatus'
+import useBackendStatus from '../hooks/useBackendStatus'
 
 function Sidebar({ currentPage, onNavigate, username, onLogout }) {
   const isOnline = useOnlineStatus()
+  const isBackendOnline = useBackendStatus()
   const [isInstallModalOpen, setIsInstallModalOpen] = useState(false)
 
   useEffect(() => {
@@ -155,12 +157,21 @@ function Sidebar({ currentPage, onNavigate, username, onLogout }) {
             <span className="mobile-player-name" title={username}>
               {username}
             </span>
+
             <span className="mobile-player-status">
               <span
                 className={`status-dot ${isOnline ? '' : 'status-dot-offline'}`}
                 aria-hidden="true"
               ></span>
-              {isOnline ? 'En línea' : 'Sin conexión'}
+              {isOnline ? 'Internet conectado' : 'Sin Internet'}
+            </span>
+
+            <span className="mobile-player-status">
+              <span
+                className={`status-dot ${isBackendOnline ? '' : 'status-dot-offline'}`}
+                aria-hidden="true"
+              ></span>
+              {isBackendOnline ? 'Servidor conectado' : 'Servidor desconectado'}
             </span>
           </div>
 
@@ -255,7 +266,15 @@ function Sidebar({ currentPage, onNavigate, username, onLogout }) {
               className={`status-dot ${isOnline ? '' : 'status-dot-offline'}`}
               aria-hidden="true"
             ></span>
-            <span>{isOnline ? 'En línea' : 'Sin conexión'}</span>
+            <span>{isOnline ? 'Internet conectado' : 'Sin Internet'}</span>
+          </div>
+
+          <div className="sidebar-status" role="status" aria-live="polite">
+            <span
+              className={`status-dot ${isBackendOnline ? '' : 'status-dot-offline'}`}
+              aria-hidden="true"
+            ></span>
+            <span>{isBackendOnline ? 'Servidor conectado' : 'Servidor desconectado'}</span>
           </div>
         </div>
       </aside>

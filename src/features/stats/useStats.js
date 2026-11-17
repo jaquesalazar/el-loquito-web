@@ -95,12 +95,14 @@ function useStats(idUsuario) {
         setStats(data)
         saveCache(idUsuario, data)
         setState('ready')
-      } catch {
-        if (cancelled) return
+           } catch {
+            if (cancelled) return
 
-        setStats(readCache(idUsuario))
-        setState(isOnline ? 'error' : 'offline')
-      }
+            const cachedStats = readCache(idUsuario)
+
+            setStats(cachedStats)
+            setState(cachedStats ? 'offline' : 'error')
+          }
     }
 
     loadStats()

@@ -94,9 +94,11 @@ function CommentsPanel({ shortId, idUsuario }) {
         setSavedComments(
           localComments.map(comment => mapComment(comment, idUsuario))
         )
+
         if (!isOnline) {
           return
         }
+
         try {
           const response = await getComments(shortId, idUsuario)
 
@@ -311,13 +313,28 @@ function CommentsPanel({ shortId, idUsuario }) {
           </span>
 
           <span className="comments-offline-message">
-            <strong>Estás sin conexión</strong>
-            <span>Se muestran los comentarios guardados en tu dispositivo.</span>
+            <strong>Estás trabajando sin conexión</strong>
+            <span>Tus comentarios guardados siguen disponibles en este dispositivo.</span>
           </span>
         </div>
       )}
 
-      {error && <p role="alert">{error}</p>}
+      {error && (
+        <div className="comments-sync-alert" role="alert">
+          <span className="comments-sync-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path
+                d="M12 8v4m0 4h.01M10.3 3.9 2.8 17.2a2 2 0 0 0 1.7 3h15a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"
+                stroke="currentColor"
+                strokeWidth="1.8"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </span>
+          <span className="comments-sync-message">{error}</span>
+        </div>
+      )}
 
       <div className="comments-list">
         {comments.map(comment => (
