@@ -113,7 +113,7 @@ export async function syncPendingLikes(idUsuario) {
   if (!idUsuario || !navigator.onLine) return
 
   const key = getPendingLikesKey(idUsuario)
-  let pendingLikes = {}
+  let pendingLikes
 
   try {
     pendingLikes = JSON.parse(localStorage.getItem(key) || '{}')
