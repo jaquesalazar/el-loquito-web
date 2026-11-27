@@ -18,6 +18,10 @@
 
 # CatTube – Aplicación web progresiva (PWA)
 
+# Documentación del proyecto
+
+Dentro de la carpeta `docs/` se encuentra la documentación correspondiente a la **Práctica 2 - Diseño del pre-proyecto PWA**. En ella se pueden consultar las imágenes, wireframes y diagramas relacionados con la propuesta inicial de CatTube, así como los archivos Markdown (`.md`) que documentan el pre-proyecto y su evolución técnica. Estos recursos permiten revisar tanto el diseño y la planeación inicial como los cambios y avances realizados durante el desarrollo de la aplicación.
+
 ## 1. Descripción del proyecto
 
 **They Are Not Pigeons** es un videojuego de estrategia narrativa que incorpora diferentes elementos y plataformas dentro de su universo. Entre ellos se encuentra **CatTube**, una plataforma ficticia de videos cortos inspirada en servicios como YouTube.
@@ -118,14 +122,13 @@ Esta sección permite consultar los datos principales del jugador y visualizar e
 
 Se desarrolló la pantalla Shorts para consultar y reproducir los videos disponibles en CatTube. En esta sección se incorporó la recuperación de información desde el Backend, incluyendo los títulos, descripciones, hashtags y métricas de las publicaciones.
 
-También se trabajó en las interacciones principales de la plataforma, permitiendo registrar likes, vistas, comentarios y compartidos. Además, se incorporó el seguimiento del progreso individual de los jugadores en los videos.
+También se trabajó en las interacciones principales de la plataforma, permitiendo registrar likes y vistas, así como consultar y publicar comentarios. Además, se incorporó el seguimiento del progreso individual de los jugadores en los videos.
 
 **Funcionalidades principales:**
 
 - **Likes:** registro de reacciones en los videos.
 - **Vistas:** registro de las visualizaciones realizadas.
 - **Comentarios:** consulta y publicación de comentarios.
-- **Compartidos:** representación del contador de veces que se comparte un video.
 - **Progreso individual:** seguimiento de las interacciones de cada jugador con los videos.
 - **Navegación:** desplazamiento entre los diferentes videos disponibles.
 
@@ -201,7 +204,7 @@ También se incorporó un mecanismo para comprobar la disponibilidad del servici
 
 Se incorporaron mecanismos para que CatTube pudiera conservar parte de su funcionamiento cuando el dispositivo pierde la conexión a Internet.
 
-Para ello, se trabajó en la detección del estado de conexión, el almacenamiento local de información y la recuperación de recursos previamente consultados. También se implementó el registro de vistas pendientes para enviarlas al Backend cuando se restablece la conexión.
+Para ello, se trabajó en la detección del estado de conexión, el almacenamiento local de información y la recuperación de recursos previamente consultados. También se implementó el registro de vistas y likes pendientes para enviarlos al Backend cuando se restablece la conexión. Los comentarios cuentan con almacenamiento local para conservar la información durante la desconexión.
 
 Estas funcionalidades permiten mejorar la continuidad de uso de la aplicación, aunque algunas operaciones siguen dependiendo de la disponibilidad del Backend.
 
@@ -222,7 +225,8 @@ Estas funcionalidades permiten mejorar la continuidad de uso de la aplicación, 
 - Recuperación de información local.
 - Revisión de la reproducción de videos previamente almacenados.
 - Registro de vistas sin conexión.
-- Comprobación de la sincronización de vistas pendientes al recuperar la conexión.
+- Comprobación de la sincronización de vistas y likes pendientes al recuperar la conexión.
+- Verificación de la conservación local de comentarios durante la desconexión.
 
 ### 4.8. Configuración de la PWA
 
@@ -365,7 +369,7 @@ También se revisó el comportamiento de la información pendiente de sincroniza
 
 Se comprobó el comportamiento de la aplicación al perder y recuperar la conexión a Internet.
 
-Durante estas verificaciones se revisó la disponibilidad de los recursos almacenados, la presentación de los avisos de conexión y la comunicación con el Backend después de recuperar el servicio.
+Durante estas verificaciones se revisó la disponibilidad de los recursos almacenados, la presentación de los avisos de conexión y la comunicación con el Backend después de recuperar el servicio. También se comprobó el registro y posterior sincronización de seis vistas, la conservación local de likes y un comentario durante la desconexión, así como el almacenamiento de tres videos para su recuperación local.
 
 ## 7. Control de versiones
 

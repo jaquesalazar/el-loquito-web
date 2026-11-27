@@ -2,195 +2,176 @@
 
 ## 1. Introducción
 
-Este documento registra la evolución técnica de CatTube, la PWA del proyecto El loquito. Describe los principales cambios realizados desde la estructura inicial hasta la integración de videos y comentarios con el backend, incluyendo las fechas, los archivos involucrados y las pruebas realizadas.
+Este documento registra la evolución técnica de CatTube, la plataforma web progresiva (PWA) del proyecto *They Are Not Pigeons*. Se describen los principales cambios realizados durante su desarrollo, desde la propuesta inicial de arquitectura e interfaz hasta la integración de funcionalidades, conexión con el backend, almacenamiento local y pruebas de funcionamiento.
 
-La aplicación web se desarrolla con React y Vite. La comunicación con los servicios del proyecto se realiza mediante solicitudes HTTP al backend.
+El propósito es mostrar cómo evolucionó la aplicación, qué tecnologías y estructuras se incorporaron y cómo se fueron ampliando sus funcionalidades de acuerdo con las necesidades del proyecto.
 
-## 2. Historial cronológico
+---
 
-### 10 de octubre de 2026: estructura y planificación inicial
+## 2. Evolución del desarrollo
 
-**Commits de referencia:** `ab45e04`, `0573f2d`, `5e88c70`, `a717086`, `bba8e4c`, `4f761a9`.
+### 10 de octubre de 2026 – Planeación y propuesta inicial
 
-Se estableció la estructura inicial de la PWA siguiendo una organización SPA, App Shell y feature-based.
+Se estableció la propuesta de arquitectura e interfaz de CatTube, definiendo su funcionamiento como una aplicación de una sola página (SPA), con una estructura visual basada en App Shell y una organización modular por características.
 
-Se realizaron las siguientes actividades:
+También se plantearon las principales pantallas de la plataforma, entre ellas el perfil del canal, el visor de shorts y las pantallas de estado y desconexión. Se definió una primera propuesta de consumo de API, así como la estrategia PWA para permitir la instalación y contemplar el funcionamiento sin conexión.
 
-- Creación de carpetas para Perfil, Shorts, componentes compartidos, servicios, utilidades y estilos.
-- Definición de las pantallas, sus datos, estados y endpoints propuestos.
-- Elaboración de wireframes de escritorio.
-- Creación de diagramas de arquitectura, navegación y funcionamiento del Service Worker.
-- Preparación inicial de archivos para el manifest, Service Worker y registro de la PWA.
-- Creación de archivos base para servicios y datos simulados.
+En esta etapa se elaboraron los wireframes, diagramas y la estructura inicial de carpetas.
 
-**Motivo:** mejorar la experiencia de navegación, contemplar diferentes estados de la aplicación y ampliar las pantallas disponibles.
+### 16 de octubre de 2026 – Configuración del proyecto
 
-### 16 de octubre de 2026: inicialización de React
+Se inició la implementación de la aplicación utilizando React y Vite. Se configuró el entorno de desarrollo y se estableció la estructura base del proyecto, separando los componentes generales de las funcionalidades principales.
 
-**Commit de referencia:** `fe1f26c`.
+Esta organización permitió comenzar el desarrollo de las diferentes secciones de manera independiente.
 
-Se inicializó el proyecto React utilizando Vite.
+### 20 de octubre de 2026 – Desarrollo del perfil y los shorts
 
-Se incorporaron los archivos de configuración, dependencias, estilos iniciales y punto de entrada de la aplicación.
+Se comenzó con la implementación de las pantallas principales de CatTube.
 
-**Motivo:** mejorar la experiencia de navegación, contemplar diferentes estados de la aplicación y ampliar las pantallas disponibles.
+Se desarrolló el perfil del canal, incorporando sus elementos visuales y la cuadrícula de videos. También se trabajó en el visor de shorts, con reproducción vertical, navegación e interacciones.
 
-### 20 de octubre de 2026: implementación de Perfil y Shorts
+Durante esta etapa se utilizaron datos locales y de prueba para construir y revisar la interfaz antes de completar la conexión con el backend.
 
-**Commit de referencia:** `6e50de0`.
+### 22 de octubre de 2026 – Estados de interfaz y configuración PWA
 
-Se implementaron las pantallas principales de Perfil y Shorts.
+Se incorporaron diferentes estados visuales de la aplicación, como carga, errores y ausencia de conexión.
 
-Se agregaron componentes para:
+También se trabajó en la configuración de los elementos principales de la PWA, incluyendo el manifiesto, el Service Worker y la página de respaldo para el modo sin conexión.
 
-- Información del perfil.
-- Cuadrícula de videos.
-- Reproductor de Shorts.
-- Botones de interacción.
-- Panel de comentarios.
-- Navegación entre videos.
-- Componentes visuales reutilizables.
+Durante esta etapa se incorporó la estructura visual inicial de la sección de estadísticas, destinada a mostrar información relacionada con seguidores, dinero y cohesión. Su integración con los datos del jugador y el backend se desarrolló en etapas posteriores.
 
-En esta etapa se utilizaron datos locales y simulados para representar el funcionamiento de la plataforma.
+### 23 de octubre de 2026 – Configuración de Docker
 
-**Motivo:** mejorar la experiencia de navegación, contemplar diferentes estados de la aplicación y ampliar las pantallas disponibles.
+Se incorporaron archivos de configuración relacionados con Docker, como parte de los recursos para preparar el entorno del proyecto y facilitar su ejecución.
 
-### 22 de octubre de 2026: estados de interfaz y funcionamiento PWA
+### 27 de octubre de 2026 – Ajustes visuales
 
-**Commits de referencia:** `72b5340`, `8ff7f50`, `70f8f18`, `b084934`.
+Se realizaron modificaciones en la interfaz para mejorar la presentación de los elementos y mantener una distribución adecuada en las diferentes resoluciones de pantalla.
 
-Se incorporaron los estados de la interfaz y el soporte inicial para funcionamiento sin conexión.
+Estos ajustes permitieron continuar refinando la experiencia visual de CatTube.
 
-Entre los cambios se encuentran:
+### 31 de octubre de 2026 – Mejoras iniciales del funcionamiento sin conexión
 
-- Estado de carga, error y ausencia de datos.
-- Banner de conexión.
-- Manifest de la PWA.
-- Service Worker.
-- Página de funcionamiento offline.
-- Registro del Service Worker.
-- Preparación de recursos y caché.
+Se trabajó en el comportamiento de la aplicación cuando se pierde la conexión a internet.
 
-También se agregó la pantalla de Estadísticas, con tarjetas y gráficas para representar cohesión, seguidores y dinero.
+Se incorporaron mecanismos para identificar el estado de conectividad, recuperar recursos almacenados y mostrar información relacionada con la disponibilidad del servidor.
 
-**Motivo:** mejorar la experiencia de navegación, contemplar diferentes estados de la aplicación y ampliar las pantallas disponibles.
+También se realizaron ajustes para permitir el acceso a determinados videos previamente guardados y se integraron recursos relacionados con la descarga de la aplicación móvil.
 
-### 23 de octubre de 2026: configuración de Docker
+### 8 de noviembre de 2026 – Integración de videos y comentarios
 
-**Commit de referencia:** `d769a4a`.
+Se avanzó en la conexión de CatTube con el backend desarrollado en Spring Boot y la base de datos PostgreSQL.
 
-Se agregaron archivos de configuración para preparar un contenedor de CatTube:
+Se incorporó un cliente HTTP centralizado y se adaptaron los servicios de la aplicación para recuperar los videos asignados a cada jugador y consultar sus comentarios.
 
-- `Dockerfile`
-- `.dockerignore`
-- `nginx.conf`
+También se implementó la comunicación necesaria para registrar nuevos comentarios y recuperar los que ya se encontraban almacenados en la base de datos.
 
-Este cambio aparece registrado en la rama `practica/git-docker`.
+### Etapas posteriores – Estadísticas, progreso e interacciones
 
-**Motivo:** mejorar la experiencia de navegación, contemplar diferentes estados de la aplicación y ampliar las pantallas disponibles.
+Se amplió la integración entre la PWA y el backend para trabajar con el progreso individual de los jugadores en los videos.
 
-### 27 de octubre de 2026: ajustes en Perfil
+Se incorporaron funcionalidades relacionadas con likes, vistas y comentarios, además del seguimiento de las estadísticas del jugador, como seguidores, dinero y cohesión.
 
-**Commit de referencia:** `0f01c7c`.
+También se trabajó en la sincronización de las interacciones realizadas sin conexión, de manera que determinados registros almacenados localmente pudieran enviarse al servidor cuando se recuperara la conectividad.
 
-Se realizaron modificaciones en la pantalla de Perfil y en algunos componentes relacionados.
+### Etapas posteriores – Mejoras del funcionamiento offline
 
-Se incorporaron imágenes para el avatar y la portada, además de ajustes en los estilos y componentes de Perfil y Shorts.
+Se reforzó el almacenamiento local mediante el uso de Cache Storage, IndexedDB y localStorage.
 
-También se modificaron elementos de la pantalla de Estadísticas y del estado de error.
+Se trabajó en la recuperación de videos previamente almacenados, la conservación local de comentarios y el registro de interacciones durante periodos sin conexión.
 
-**Motivo:** mejorar la experiencia de navegación, contemplar diferentes estados de la aplicación y ampliar las pantallas disponibles.
+Además, se incorporaron mecanismos para diferenciar el estado de la conexión a internet del estado de disponibilidad del backend, permitiendo mostrar mensajes adecuados según cada situación.
 
-### 31 de octubre de 2026: mejoras offline y descarga de Android
+### Etapas posteriores – Preparación y despliegue de la PWA
 
-**Commits de referencia:** `7f86676`, `617699f`.
+Se realizaron ajustes en la configuración de producción y en los recursos necesarios para preparar la aplicación como PWA.
 
-Se mejoró el funcionamiento sin conexión y la detección del estado de conectividad.
+Se revisó el proceso de compilación, la generación de recursos y la preparación de los archivos necesarios para su instalación y funcionamiento.
 
-Se modificaron elementos como:
+---
 
-- Service Worker.
-- Hook de detección de conexión.
-- Consulta y navegación de Shorts.
-- Estados visuales de las pantallas.
-- Archivo de comprobación de conexión.
+## 3. Organización técnica
 
-También se agregó un modal para descargar la aplicación Android y se incorporó el archivo APK en `public/downloads/app-release.apk`.
+Durante el desarrollo se mantuvo el enfoque de SPA con App Shell planteado desde el pre-proyecto. La organización modular también se conservó y se amplió conforme se incorporaron nuevas funcionalidades.
 
-**Motivo:** mejorar la experiencia de navegación, contemplar diferentes estados de la aplicación y ampliar las pantallas disponibles.
+Estos conceptos cumplen funciones diferentes y complementarias: la SPA define el comportamiento de navegación, el App Shell establece la estructura visual principal y la arquitectura modular organiza el código por funcionalidades.
 
-### 8 de noviembre de 2026: integración de videos y comentarios con el backend
+La estructura del proyecto se fue ampliando para separar las responsabilidades de cada sección:
 
-**Commit de referencia:** `7ebe19b`.
+| Carpeta                 | Responsabilidad                                                                          |
+| ----------------------- | ---------------------------------------------------------------------------------------- |
+| `src/features/profile/` | Funcionalidades relacionadas con el perfil del canal y la presentación de sus videos.    |
+| `src/features/shorts/`  | Reproducción de shorts, interacciones, comentarios y seguimiento del progreso.           |
+| `src/features/stats/`   | Visualización y consulta de las estadísticas del jugador.                                |
+| `src/shared/services/`  | Servicios compartidos, comunicación con el backend y manejo de solicitudes HTTP.         |
+| `src/pwa/`              | Registro y configuración relacionada con el Service Worker.                              |
+| `public/`               | Recursos públicos, manifiesto, íconos, página offline y archivos necesarios para la PWA. |
+| `scripts/`              | Scripts auxiliares para preparar los recursos de la aplicación.                          |
 
-Se conectó la pantalla de Shorts con los servicios del backend para consultar y reproducir videos reales.
+Esta organización permitió agregar nuevas secciones sin concentrar toda la lógica en un solo lugar y facilitó el mantenimiento de la aplicación.
 
-Se realizaron los siguientes cambios:
+---
 
-- Integración del cliente HTTP en `src/shared/services/apiClient.js`.
-- Consulta de videos mediante `src/features/shorts/shortsService.js`.
-- Adaptación de los datos recibidos del backend al formato utilizado por la interfaz.
-- Reproducción de archivos de video mediante el reproductor HTML5.
-- Creación de `src/features/shorts/commentsService.js`.
-- Consulta de comentarios asociados a cada video.
-- Publicación de comentarios mediante solicitudes al backend.
-- Actualización de la interfaz después de publicar un comentario.
-- Persistencia de comentarios en PostgreSQL.
-- Mejoras visuales en los avatares, identificación del creador y componentes de comentarios.
-- Ajustes en la configuración de Vite para la comprobación de conexión.
+## 4. Pruebas realizadas
 
-Los endpoints utilizados para los comentarios son:
+Durante el desarrollo se realizaron pruebas para verificar tanto la interfaz como la comunicación entre CatTube y el backend.
 
-| Método | Endpoint | Función |
-|---|---|---|
-| GET | `/api/videos` | Consultar videos. |
-| GET | `/api/videos/{idVideo}/comentarios` | Consultar comentarios de un video. |
-| POST | `/api/videos/{idVideo}/comentarios` | Publicar un comentario. |
-| DELETE | `/api/videos/{idVideo}/comentarios/{idComentario}?idUsuario={idUsuario}` | Eliminar un comentario. |
+Entre las principales comprobaciones se encuentran:
 
-**Motivo:** mejorar la experiencia de navegación, contemplar diferentes estados de la aplicación y ampliar las pantallas disponibles.
+- **Interfaz:** revisión de las pantallas de perfil, shorts, estadísticas y navegación en diferentes tamaños de pantalla.
+- **Compilación:** ejecución de `npm run build` para comprobar que la aplicación pudiera generarse correctamente para producción.
+- **Conexión con el backend:** consulta del endpoint de salud para verificar la disponibilidad del servidor.
+- **Videos:** recuperación de los videos asignados al jugador y comprobación de su reproducción.
+- **Comentarios:** consulta y registro de comentarios, verificando su almacenamiento en la base de datos.
+- **Likes:** registro de interacciones y conservación de los datos durante periodos sin conexión.
+- **Vistas:** registro de reproducciones y posterior sincronización con el backend.
+- **Funcionamiento offline:** recuperación de recursos y videos previamente almacenados, además de la conservación local de comentarios e interacciones.
+- **Estadísticas:** consulta y visualización de la información correspondiente al progreso del jugador.
 
-## 3. Pruebas realizadas
+En las pruebas de funcionamiento sin conexión se comprobó que la aplicación podía conservar determinadas interacciones localmente y sincronizarlas posteriormente. Como parte de estas comprobaciones, se registraron y después se sincronizaron seis vistas, se conservaron likes y un comentario durante la desconexión, y se almacenaron tres videos para su recuperación local.
 
-Durante la integración del 8 de noviembre de 2026 se realizaron las siguientes comprobaciones:
+Estas pruebas permitieron comprobar que las funcionalidades principales continuaban disponibles en distintos escenarios de conectividad.
 
-| Prueba | Resultado |
-|---|---|
-| Compilación de producción con `npm run build` | Correcta |
-| Consulta de videos desde el backend | Correcta |
-| Reproducción de videos reales | Correcta |
-| Visualización de comentarios | Correcta |
-| Publicación de comentarios | Correcta |
-| Actualización del comentario en pantalla | Correcta |
-| Persistencia después de recargar la página | Correcta |
-| Revisión de cambios con `git diff --check` | Correcta |
+---
 
-La compilación generó los recursos de producción y preparó los recursos de la PWA.
+## 5. Organización de repositorios
 
-## 4. Control de versiones
+El desarrollo se organizó en dos repositorios independientes para separar la aplicación web de la lógica del servidor.
 
-Los cambios se gestionaron mediante Git y GitHub, utilizando ramas para organizar el desarrollo y commits para registrar las modificaciones.
+| Repositorio                   | Función                                                                                             |
+| ----------------------------- | --------------------------------------------------------------------------------------------------- |
+| `jaquesalazar/el-loquito-web` | Contiene el desarrollo de CatTube, su interfaz, funcionalidades y configuración PWA.                |
+| `jaquesalazar/base-loquito`   | Contiene el backend desarrollado con Spring Boot y la integración con PostgreSQL mediante Supabase. |
 
-El avance de integración de videos y comentarios quedó registrado con:
+Ambos repositorios mantienen su propio control de versiones y proceso de desarrollo. La comunicación entre ellos se realiza mediante los endpoints de la API.
 
-- **Rama:** `develop`
-- **Commit:** `7ebe19b`
-- **Mensaje:** `feat: integrar videos y comentarios con el backend`
-- **Fecha:** 8 de noviembre de 2026
-- **Archivos modificados:** 11
-- **Inserciones:** 395
-- **Eliminaciones:** 104
+---
 
-El commit fue enviado correctamente a `origin/develop`.
+## 6. Estado actual del proyecto
 
-## 5. Organización de los proyectos
+Como resultado de las etapas de desarrollo, CatTube cuenta con las siguientes funcionalidades:
 
-CatTube PWA y el proyecto Base se mantienen en repositorios independientes, de acuerdo con la organización establecida para el trabajo.
+- Interfaz web adaptable a diferentes tamaños de pantalla.
+- Perfil del canal y cuadrícula de shorts.
+- Reproducción de videos e interacciones.
+- Registro de likes, vistas y comentarios.
+- Consulta de estadísticas del jugador.
+- Integración con el backend y la base de datos PostgreSQL.
+- Identificación del estado de conexión a internet y disponibilidad del servidor.
+- Almacenamiento local de determinados recursos e interacciones.
+- Recuperación de videos previamente almacenados.
+- Preparación de la aplicación como PWA para su instalación y uso.
 
-La PWA contiene la interfaz y los servicios de comunicación con el backend. El proyecto Base contiene los servicios del servidor y la administración de la base de datos PostgreSQL.
+La aplicación mantiene una organización modular y una separación entre el frontend y el backend, lo que permite continuar incorporando funcionalidades sin modificar por completo la estructura existente.
 
-## 6. Estado de la evolución
+---
 
-Al 8 de noviembre de 2026, la PWA cuenta con las pantallas y componentes desarrollados durante las etapas anteriores, soporte offline, descarga de la aplicación Android e integración de videos y comentarios con el backend.
+## 7. Conclusión
 
-Este documento se actualizará conforme se incorporen nuevas funcionalidades y cambios al proyecto.
+El desarrollo de CatTube pasó de una propuesta inicial de arquitectura e interfaz a una aplicación web progresiva con funcionalidades integradas y comunicación con un backend.
+
+Durante este proceso se mantuvo el planteamiento de SPA con App Shell y se amplió la organización modular para incorporar nuevas secciones, como estadísticas, interacciones y almacenamiento local.
+
+Las pruebas realizadas permitieron verificar la reproducción de videos, el registro de interacciones, la persistencia de comentarios y la recuperación de recursos sin conexión. Asimismo, la integración con Spring Boot y PostgreSQL permitió conectar las funcionalidades de la aplicación con la información almacenada en el servidor.
+
+De esta manera, CatTube evolucionó de un diseño inicial a una plataforma funcional dentro del proyecto *They Are Not Pigeons*, con una estructura preparada para continuar creciendo y mejorando.
