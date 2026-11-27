@@ -5,6 +5,49 @@ import { loginPlayer } from './usernameService'
 import './UsernamePage.css'
 import LegalDocuments from '../../shared/components/LegalDocuments'
 
+// Solicita permiso para mostrar notificaciones.
+async function requestNotificationPermission() {
+  if (
+    !('Notification' in window) ||
+    !('serviceWorker' in navigator)
+  ) {
+    return false
+  }
+
+  try {
+    let permission = Notification.permission
+
+    if (permission === 'default') {
+      permission = await Notification.requestPermission()
+    }
+
+    return permission === 'granted'
+  } catch {
+    return false
+  }
+}
+
+// Muestra la notificación de bienvenida mediante el Service Worker existente.
+async function showWelcomeNotification() {
+  try {
+    const registration = await navigator.serviceWorker.ready
+
+    await registration.showNotification('¡Bienvenido a CatTube!', {
+      body: 'Se ha iniciado sesión correctamente.',
+      tag: 'cattube-welcome'
+    })
+  } catch (error) {
+    console.warn('No se pudo mostrar la notificación:', error)
+  }
+}
+
+// Genera una vibración cuando el inicio de sesión es exitoso.
+function vibrateOnLogin() {
+  if ('vibrate' in navigator) {
+    navigator.vibrate(200)
+  }
+}
+
 function UsernamePage({ onLogin }) {
   const [username, setUsername] = useState('')
   const [error, setError] = useState('')
@@ -24,7 +67,15 @@ function UsernamePage({ onLogin }) {
     setError('')
 
     try {
+      const notificationAllowed = await requestNotificationPermission()
       const player = await loginPlayer(cleanUsername)
+
+      if (notificationAllowed) {
+        await showWelcomeNotification()
+      }
+
+      vibrateOnLogin()
+
       onLogin(player)
     } catch {
       setError('No se pudo iniciar sesión. Comprueba tu conexión e inténtalo de nuevo.')
